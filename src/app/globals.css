@@ -1,26 +1,139 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* app-specific aliases, carried over from the approved reference doc */
+  --color-paper: var(--background);
+  --color-paper-raised: var(--paper-raised);
+  --color-ink: var(--foreground);
+  --color-ink-soft: var(--ink-soft);
+  --color-line: var(--border);
+  --color-moss: var(--moss);
+  --color-moss-soft: var(--moss-soft);
+  --color-amber: var(--amber);
+  --color-amber-soft: var(--amber-soft);
+  --color-brick: var(--destructive);
+  --color-brick-soft: var(--brick-soft);
+
+  --font-sans: "Trebuchet MS", "Segoe UI", sans-serif;
+  --font-heading: Cambria, "Iowan Old Style", Georgia, serif;
+  --font-mono: "Cascadia Mono", Consolas, "SFMono-Regular", ui-monospace,
+    monospace;
+
+  --radius-sm: calc(var(--radius) * 0.75);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) * 1.5);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --background: #f1efe8;
+  --foreground: #211f1c;
+  --ink-soft: #57534a;
+  --paper-raised: #e8e3d6;
+
+  --card: var(--paper-raised);
+  --card-foreground: var(--foreground);
+  --popover: var(--paper-raised);
+  --popover-foreground: var(--foreground);
+
+  /* brand accent (verdigris) doubles as shadcn's "primary" */
+  --primary: #3f7c74;
+  --primary-foreground: #f1efe8;
+
+  --secondary: var(--paper-raised);
+  --secondary-foreground: var(--foreground);
+  --muted: var(--paper-raised);
+  --muted-foreground: var(--ink-soft);
+
+  /* structural hover/focus tint, distinct from the brand accent above */
+  --accent: #dce7e3;
+  --accent-foreground: var(--foreground);
+
+  --destructive: #a6432f;
+  --brick-soft: #f1e0da;
+  --moss: #5b7f4f;
+  --moss-soft: #e1e9d7;
+  --amber: #a8752f;
+  --amber-soft: #f2e4cd;
+
+  --border: #c9c4b7;
+  --input: #c9c4b7;
+  --ring: #3f7c74;
+
+  --radius: 0.2rem;
+}
+
+.dark {
+  --background: #1b1916;
+  --foreground: #ece7dc;
+  --ink-soft: #b7af9e;
+  --paper-raised: #242119;
+
+  --card: var(--paper-raised);
+  --card-foreground: var(--foreground);
+  --popover: var(--paper-raised);
+  --popover-foreground: var(--foreground);
+
+  --primary: #6bad9f;
+  --primary-foreground: #1b1916;
+
+  --secondary: var(--paper-raised);
+  --secondary-foreground: var(--foreground);
+  --muted: var(--paper-raised);
+  --muted-foreground: var(--ink-soft);
+
+  --accent: #263430;
+  --accent-foreground: var(--foreground);
+
+  --destructive: #d4886f;
+  --brick-soft: #34211c;
+  --moss: #86b473;
+  --moss-soft: #212c1c;
+  --amber: #d9a15c;
+  --amber-soft: #3a2c18;
+
+  --border: #4a4438;
+  --input: #4a4438;
+  --ring: #6bad9f;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  html {
+    @apply font-sans;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-heading;
+    text-wrap: balance;
+  }
 }
