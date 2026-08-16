@@ -1,5 +1,6 @@
 import { dataClient } from "@/lib/data";
 import { AreaSummaryCard } from "@/components/dashboard/AreaSummaryCard";
+import { DashboardOverview } from "@/components/dashboard/DashboardOverview";
 import { KpiStrip } from "@/components/dashboard/KpiStrip";
 import { AttentionList } from "@/components/dashboard/AttentionList";
 import { UpcomingPanel } from "@/components/dashboard/UpcomingPanel";
@@ -231,23 +232,25 @@ export default async function DashboardPage() {
         <h1 className="mt-1 text-3xl font-bold">The 3250 Duplex</h1>
       </div>
 
-      <KpiStrip
-        activeProjects={activeProjects}
-        totalProjects={projects.length}
-        statusBreakdown={statusBreakdown}
-        committedCents={totalCommittedCents}
-        budgetLimitCents={totalLimitCents}
-        budgetCount={areaBudgetSpends.length}
-        checklistDone={checklistDone}
-        checklistTotal={checklistTotal}
-        quotesAwaitingCount={quotesAwaiting.length}
-        quotesAwaitingDetail={quotesAwaitingDetail}
-      />
+      <DashboardOverview>
+        <KpiStrip
+          activeProjects={activeProjects}
+          totalProjects={projects.length}
+          statusBreakdown={statusBreakdown}
+          committedCents={totalCommittedCents}
+          budgetLimitCents={totalLimitCents}
+          budgetCount={areaBudgetSpends.length}
+          checklistDone={checklistDone}
+          checklistTotal={checklistTotal}
+          quotesAwaitingCount={quotesAwaiting.length}
+          quotesAwaitingDetail={quotesAwaitingDetail}
+        />
 
-      <section className="space-y-3">
-        <h2 className="text-lg font-semibold">Needs attention</h2>
-        <AttentionList items={attentionItems} />
-      </section>
+        <section className="space-y-3">
+          <h2 className="text-lg font-semibold">Needs attention</h2>
+          <AttentionList items={attentionItems} />
+        </section>
+      </DashboardOverview>
 
       <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
         <div className="space-y-10">
