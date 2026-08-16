@@ -166,13 +166,20 @@ site_url = "http://localhost:3000"
 # A list of *exact* URLs that auth providers are permitted to redirect to post authentication.
 additional_redirect_urls = ["http://localhost:3000/**", "https://duplex-tracker.vercel.app/**"]
 # How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).
-jwt_expiry = 3600
+# Raised from the 1hr default -- with every route behind auth and Next.js
+# link-prefetching firing background requests, refreshing once an hour gave
+# refresh-token rotation many chances a day to race and kill the session.
+jwt_expiry = 604800
 # JWT issuer URL. If not set, defaults to auth.external_url.
 # jwt_issuer = ""
 # Path to JWT signing key. DO NOT commit your signing keys file to git.
 # signing_keys_path = "./signing_keys.json"
 # If disabled, the refresh token will never expire.
-enable_refresh_token_rotation = true
+# Off: this is a 2-user household app, not a target worth rotation's
+# reuse-detection tradeoff -- rotation was the actual cause of repeated
+# same-device sign-outs (concurrent prefetch requests racing to refresh the
+# same token, one losing and nuking the whole session).
+enable_refresh_token_rotation = false
 # Allows refresh tokens to be reused after expiry, up to the specified interval in seconds.
 # Requires enable_refresh_token_rotation = true.
 refresh_token_reuse_interval = 10
