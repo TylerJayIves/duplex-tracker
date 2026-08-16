@@ -22,13 +22,15 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
           <Link href="/" className="font-heading text-lg font-bold text-ink">
             The Duplex
           </Link>
-          <nav className="flex flex-wrap items-center gap-1">
-            {NAV_ITEMS.map((item) => (
-              <NavLink key={item.href} href={item.href}>
-                {item.label}
-              </NavLink>
-            ))}
-          </nav>
+          {user && (
+            <nav className="flex flex-wrap items-center gap-1">
+              {NAV_ITEMS.map((item) => (
+                <NavLink key={item.href} href={item.href}>
+                  {item.label}
+                </NavLink>
+              ))}
+            </nav>
+          )}
           <div className="flex items-center gap-3">
             {user && (
               <form action={signOut} className="flex items-center gap-2">
