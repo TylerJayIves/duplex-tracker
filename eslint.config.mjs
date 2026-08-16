@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Supabase CLI's own local runtime state, not source we wrote.
+    "supabase/.temp/**",
+    "supabase/.branches/**",
   ]),
 ]);
 
