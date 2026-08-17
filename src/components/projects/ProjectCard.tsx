@@ -3,6 +3,8 @@ import { Card } from "@/components/ui/Card";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { BudgetHealthBar } from "@/components/dashboard/BudgetHealthBar";
 import { formatDate } from "@/lib/format";
+import { projectColorConfig } from "@/lib/project-colors";
+import { cn } from "@/lib/utils";
 import type { Area, Project } from "@/lib/data/types";
 
 export function ProjectCard({
@@ -14,9 +16,16 @@ export function ProjectCard({
   area: Area | undefined;
   budget: { limitCents: number; committedCents: number } | null;
 }) {
+  const color = projectColorConfig(project.color);
+
   return (
     <Link href={`/projects/${project.id}`}>
-      <Card className="flex h-full flex-col gap-3 transition-colors hover:border-primary">
+      <Card
+        className={cn(
+          "flex h-full flex-col gap-3 transition-colors hover:border-primary",
+          color && ["border-l-4", color.borderLeft]
+        )}
+      >
         <div className="flex items-start justify-between gap-2">
           <div>
             <p className="font-mono text-[0.68rem] tracking-wide text-ink-soft uppercase">

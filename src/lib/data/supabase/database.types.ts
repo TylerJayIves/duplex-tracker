@@ -289,6 +289,7 @@ export type Database = {
         Row: {
           area_id: string
           category: string | null
+          color: Database["public"]["Enums"]["project_color"] | null
           created_at: string
           description: string | null
           id: string
@@ -302,6 +303,7 @@ export type Database = {
         Insert: {
           area_id: string
           category?: string | null
+          color?: Database["public"]["Enums"]["project_color"] | null
           created_at?: string
           description?: string | null
           id?: string
@@ -315,6 +317,7 @@ export type Database = {
         Update: {
           area_id?: string
           category?: string | null
+          color?: Database["public"]["Enums"]["project_color"] | null
           created_at?: string
           description?: string | null
           id?: string
@@ -530,6 +533,7 @@ export type Database = {
       attachment_related_type: "project" | "quote" | "cost_item"
       budget_related_type: "property" | "area" | "project"
       cost_category: "materials" | "labor" | "permits" | "other"
+      project_color: "indigo" | "plum" | "rose" | "slate" | "mustard" | "denim"
       project_priority: "low" | "medium" | "high"
       project_status: "idea" | "planned" | "in_progress" | "done" | "blocked"
       quote_status: "requested" | "received" | "accepted" | "declined"
@@ -667,6 +671,7 @@ export const Constants = {
       attachment_related_type: ["project", "quote", "cost_item"],
       budget_related_type: ["property", "area", "project"],
       cost_category: ["materials", "labor", "permits", "other"],
+      project_color: ["indigo", "plum", "rose", "slate", "mustard", "denim"],
       project_priority: ["low", "medium", "high"],
       project_status: ["idea", "planned", "in_progress", "done", "blocked"],
       quote_status: ["requested", "received", "accepted", "declined"],

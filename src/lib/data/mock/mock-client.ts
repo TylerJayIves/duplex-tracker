@@ -93,6 +93,7 @@ export const mockClient: DataClient = {
       priority: input.priority ?? "medium",
       startDate: input.startDate ?? null,
       targetEndDate: input.targetEndDate ?? null,
+      color: input.color ?? null,
     };
     store.projects.push(project);
     return project;

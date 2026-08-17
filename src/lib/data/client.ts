@@ -34,7 +34,10 @@ export interface DataClient {
   createProject(
     input: Pick<Project, "areaId" | "leadId" | "title" | "category"> &
       Partial<
-        Pick<Project, "description" | "priority" | "startDate" | "targetEndDate">
+        Pick<
+          Project,
+          "description" | "priority" | "startDate" | "targetEndDate" | "color"
+        >
       >
   ): Promise<Project>;
   updateProject(
@@ -42,7 +45,13 @@ export interface DataClient {
     patch: Partial<
       Pick<
         Project,
-        "title" | "description" | "priority" | "startDate" | "targetEndDate" | "leadId"
+        | "title"
+        | "description"
+        | "priority"
+        | "startDate"
+        | "targetEndDate"
+        | "leadId"
+        | "color"
       >
     >
   ): Promise<Project>;

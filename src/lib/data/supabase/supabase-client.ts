@@ -97,6 +97,7 @@ function mapProject(row: Row<"projects">): Project {
     priority: row.priority,
     startDate: row.start_date,
     targetEndDate: row.target_end_date,
+    color: row.color,
   };
 }
 
@@ -300,6 +301,7 @@ export const supabaseClient: DataClient = {
         priority: input.priority ?? "medium",
         start_date: input.startDate ?? null,
         target_end_date: input.targetEndDate ?? null,
+        color: input.color ?? null,
       })
       .select()
       .single();
@@ -316,6 +318,7 @@ export const supabaseClient: DataClient = {
     if (patch.startDate !== undefined) dbPatch.start_date = patch.startDate;
     if (patch.targetEndDate !== undefined) dbPatch.target_end_date = patch.targetEndDate;
     if (patch.leadId !== undefined) dbPatch.lead_id = patch.leadId;
+    if (patch.color !== undefined) dbPatch.color = patch.color;
 
     const { data, error } = await supabase
       .from("projects")

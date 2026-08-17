@@ -37,6 +37,15 @@
   --color-brick: var(--destructive);
   --color-brick-soft: var(--brick-soft);
 
+  /* Decorative per-project colors -- kept out of the moss/amber/brick
+     family above since those already carry status meaning. */
+  --color-project-indigo: var(--project-indigo);
+  --color-project-plum: var(--project-plum);
+  --color-project-rose: var(--project-rose);
+  --color-project-slate: var(--project-slate);
+  --color-project-mustard: var(--project-mustard);
+  --color-project-denim: var(--project-denim);
+
   --font-sans: "Trebuchet MS", "Segoe UI", sans-serif;
   --font-heading: Cambria, "Iowan Old Style", Georgia, serif;
   --font-mono: "Cascadia Mono", Consolas, "SFMono-Regular", ui-monospace,
@@ -83,6 +92,13 @@
   --ring: #3f7c74;
 
   --radius: 0.2rem;
+
+  --project-indigo: #4f5b92;
+  --project-plum: #7d4f80;
+  --project-rose: #a8506b;
+  --project-slate: #55677a;
+  --project-mustard: #8a7a1f;
+  --project-denim: #3f6a91;
 }
 
 .dark {
@@ -117,6 +133,13 @@
   --border: #4a4438;
   --input: #4a4438;
   --ring: #6bad9f;
+
+  --project-indigo: #8b95c9;
+  --project-plum: #c58ec7;
+  --project-rose: #d693a3;
+  --project-slate: #93a4b5;
+  --project-mustard: #cbb857;
+  --project-denim: #86b0d4;
 }
 
 @layer base {

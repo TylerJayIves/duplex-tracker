@@ -3,15 +3,24 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { dataClient } from "@/lib/data";
-import type { ID, ProjectPriority, ProjectStatus } from "@/lib/data/types";
+import type { ID, ProjectColor, ProjectPriority, ProjectStatus } from "@/lib/data/types";
 
 export type ProjectActionState = { error: string } | undefined;
 
 const VALID_PRIORITIES: ProjectPriority[] = ["low", "medium", "high"];
+const VALID_COLORS: ProjectColor[] = ["indigo", "plum", "rose", "slate", "mustard", "denim"];
 
 function parsePriority(raw: FormDataEntryValue | null): ProjectPriority | null {
   return typeof raw === "string" && VALID_PRIORITIES.includes(raw as ProjectPriority)
     ? (raw as ProjectPriority)
+    : null;
+}
+
+// Empty string means "no color" (the ProjectColorSelect's "×" option), a
+// blank hidden input isn't a validation failure the way a blank priority is.
+function parseColor(raw: FormDataEntryValue | null): ProjectColor | null {
+  return typeof raw === "string" && VALID_COLORS.includes(raw as ProjectColor)
+    ? (raw as ProjectColor)
     : null;
 }
 
@@ -27,6 +36,7 @@ export async function createProjectAction(
   const priority = parsePriority(formData.get("priority")) ?? "medium";
   const startDate = String(formData.get("startDate") ?? "").trim() || null;
   const targetEndDate = String(formData.get("targetEndDate") ?? "").trim() || null;
+  const color = parseColor(formData.get("color"));
 
   if (!areaId) return { error: "Choose an area." };
   if (!leadId) return { error: "Choose a lead." };
@@ -44,6 +54,7 @@ export async function createProjectAction(
       priority,
       startDate,
       targetEndDate,
+      color,
     });
   } catch {
     return { error: "Couldn't create project. Try again." };
@@ -65,6 +76,7 @@ export async function updateProjectAction(
   const startDate = String(formData.get("startDate") ?? "").trim() || null;
   const targetEndDate = String(formData.get("targetEndDate") ?? "").trim() || null;
   const leadId = String(formData.get("leadId") ?? "").trim();
+  const color = parseColor(formData.get("color"));
 
   if (!title) return { error: "Enter a title." };
   if (!priority) return { error: "Choose a priority." };
@@ -77,6 +89,7 @@ export async function updateProjectAction(
     startDate,
     targetEndDate,
     leadId,
+    color,
   });
   revalidatePath(`/projects/${id}`);
   return undefined;
