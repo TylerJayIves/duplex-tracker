@@ -155,6 +155,7 @@ export const projects: Project[] = [
     priority: "high",
     startDate: "2026-06-01",
     targetEndDate: "2026-09-15",
+    color: "denim",
   },
   {
     id: "project-roof-replacement",
@@ -168,6 +169,7 @@ export const projects: Project[] = [
     priority: "high",
     startDate: "2026-09-01",
     targetEndDate: "2026-10-15",
+    color: "slate",
   },
   {
     id: "project-unit-b-bath",
@@ -181,6 +183,7 @@ export const projects: Project[] = [
     priority: "medium",
     startDate: null,
     targetEndDate: null,
+    color: "plum",
   },
   {
     id: "project-garage-door",
@@ -193,6 +196,7 @@ export const projects: Project[] = [
     priority: "low",
     startDate: "2026-03-20",
     targetEndDate: "2026-04-10",
+    color: "mustard",
   },
   {
     id: "project-garden-landscaping",
@@ -206,6 +210,7 @@ export const projects: Project[] = [
     priority: "low",
     startDate: null,
     targetEndDate: null,
+    color: "rose",
   },
   {
     id: "project-siding-repair",
@@ -218,6 +223,7 @@ export const projects: Project[] = [
     priority: "medium",
     startDate: "2026-08-25",
     targetEndDate: "2026-09-05",
+    color: "indigo",
   },
 ];
 

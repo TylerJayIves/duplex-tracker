@@ -32,6 +32,11 @@ export type ProjectStatus =
 
 export type ProjectPriority = "low" | "medium" | "high";
 
+// Purely decorative, for telling projects apart at a glance -- deliberately
+// disjoint from the app's semantic accent colors (moss/amber/brick already
+// mean done/warning/danger), so a colored project never reads as a status.
+export type ProjectColor = "indigo" | "plum" | "rose" | "slate" | "mustard" | "denim";
+
 export interface Project {
   id: ID;
   areaId: ID;
@@ -43,6 +48,7 @@ export interface Project {
   priority: ProjectPriority;
   startDate: ISODateString | null;
   targetEndDate: ISODateString | null;
+  color: ProjectColor | null;
 }
 
 export interface Task {

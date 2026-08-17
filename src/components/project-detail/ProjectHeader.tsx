@@ -7,6 +7,8 @@ import { EditProjectForm } from "./EditProjectForm";
 import { ConfirmDeleteButton } from "@/components/shared/ConfirmDeleteButton";
 import { deleteProjectAction } from "@/lib/actions/projects";
 import { formatDate } from "@/lib/format";
+import { projectColorConfig } from "@/lib/project-colors";
+import { cn } from "@/lib/utils";
 import type { Area, Project, User } from "@/lib/data/types";
 
 export function ProjectHeader({
@@ -21,6 +23,7 @@ export function ProjectHeader({
   users: User[];
 }) {
   const [isEditing, setIsEditing] = useState(false);
+  const color = projectColorConfig(project.color);
 
   return (
     <div className="space-y-3">
@@ -38,7 +41,15 @@ export function ProjectHeader({
             Editing project…
           </span>
         ) : (
-          <h1 className="text-3xl font-bold">{project.title}</h1>
+          <h1 className="flex items-center gap-3 text-3xl font-bold">
+            {color && (
+              <span
+                className={cn("h-3 w-3 shrink-0 rounded-full", color.dot)}
+                aria-hidden="true"
+              />
+            )}
+            {project.title}
+          </h1>
         )}
         <StatusSelect projectId={project.id} status={project.status} />
       </div>

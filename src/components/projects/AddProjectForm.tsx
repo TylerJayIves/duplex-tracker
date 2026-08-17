@@ -5,6 +5,7 @@ import { createProjectAction } from "@/lib/actions/projects";
 import { AreaSelect } from "./AreaSelect";
 import { LeadSelect } from "./LeadSelect";
 import { PrioritySelect } from "./PrioritySelect";
+import { ProjectColorSelect } from "./ProjectColorSelect";
 import { Button } from "@/components/ui/button";
 import type { Area, User } from "@/lib/data/types";
 
@@ -103,6 +104,12 @@ export function AddProjectForm({
             className="w-full border border-border bg-background px-2 py-1 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
           />
         </div>
+      </div>
+      <div className="space-y-1">
+        <label className="font-mono text-[0.68rem] tracking-wide text-ink-soft uppercase">
+          Color
+        </label>
+        <ProjectColorSelect />
       </div>
       <div className="flex items-center gap-2">
         <Button type="submit" size="sm" disabled={isPending}>

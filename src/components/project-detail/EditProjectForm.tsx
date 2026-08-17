@@ -4,6 +4,7 @@ import { useActionState, useEffect, useRef } from "react";
 import { updateProjectAction } from "@/lib/actions/projects";
 import { PrioritySelect } from "@/components/projects/PrioritySelect";
 import { LeadSelect } from "@/components/projects/LeadSelect";
+import { ProjectColorSelect } from "@/components/projects/ProjectColorSelect";
 import { Button } from "@/components/ui/button";
 import type { Project, User } from "@/lib/data/types";
 
@@ -85,6 +86,12 @@ export function EditProjectForm({
             className="w-full border border-border bg-background px-2 py-1 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
           />
         </div>
+      </div>
+      <div className="space-y-1">
+        <label className="font-mono text-[0.68rem] tracking-wide text-ink-soft uppercase">
+          Color
+        </label>
+        <ProjectColorSelect defaultValue={project.color} />
       </div>
       <div className="flex items-center gap-2">
         <Button type="submit" size="sm" disabled={isPending}>

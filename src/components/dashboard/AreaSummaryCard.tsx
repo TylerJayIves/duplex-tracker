@@ -8,6 +8,8 @@ import { ProgressBar } from "@/components/ui/ProgressBar";
 import { BudgetHealthBar } from "./BudgetHealthBar";
 import { EditAreaForm } from "./EditAreaForm";
 import { formatCents, formatDate } from "@/lib/format";
+import { projectColorConfig } from "@/lib/project-colors";
+import { cn } from "@/lib/utils";
 import type { Area, Project } from "@/lib/data/types";
 
 export function AreaSummaryCard({
@@ -74,17 +76,28 @@ export function AreaSummaryCard({
 
       {projects.length > 0 ? (
         <ul className="space-y-2">
-          {projects.map((project) => (
-            <li key={project.id}>
-              <Link
-                href={`/projects/${project.id}`}
-                className="flex items-center justify-between gap-2 text-sm hover:text-primary"
-              >
-                <span className="min-w-0 truncate">{project.title}</span>
-                <StatusPill status={project.status} />
-              </Link>
-            </li>
-          ))}
+          {projects.map((project) => {
+            const color = projectColorConfig(project.color);
+            return (
+              <li key={project.id}>
+                <Link
+                  href={`/projects/${project.id}`}
+                  className="flex items-center justify-between gap-2 text-sm hover:text-primary"
+                >
+                  <span className="flex min-w-0 items-center gap-2">
+                    {color && (
+                      <span
+                        className={cn("h-2 w-2 shrink-0 rounded-full", color.dot)}
+                        aria-hidden="true"
+                      />
+                    )}
+                    <span className="min-w-0 truncate">{project.title}</span>
+                  </span>
+                  <StatusPill status={project.status} />
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       ) : (
         <p className="text-sm text-ink-soft">No projects yet.</p>
