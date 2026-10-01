@@ -31,6 +31,8 @@ function signInMessage(code: string | undefined, status: number | undefined): st
     case "captcha_failed":
       return "Supabase has captcha turned on, which this sign-in form doesn't support.";
   }
+  // supabase-js reports status 0 when the request never got an answer.
+  if (!status) return "Couldn't reach Supabase. Check NEXT_PUBLIC_SUPABASE_URL for this deployment.";
   if (status === 429) return "Too many attempts. Wait a few minutes, then try again.";
   return `Sign-in failed (${code ?? status ?? "unknown error"}). Try again.`;
 }
