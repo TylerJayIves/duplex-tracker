@@ -34,9 +34,12 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
           <div className="flex items-center gap-3">
             {user && (
               <form action={signOut} className="flex items-center gap-2">
-                <span className="font-mono text-xs text-ink-soft">
+                <Link
+                  href="/account"
+                  className="font-mono text-xs text-ink-soft hover:text-ink"
+                >
                   {user.name}
-                </span>
+                </Link>
                 <button
                   type="submit"
                   className="border border-border px-2 py-1 font-mono text-[0.68rem] tracking-wide text-ink-soft uppercase hover:text-ink"
