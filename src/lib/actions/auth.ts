@@ -16,7 +16,24 @@ function safeNext(value: FormDataEntryValue | null): string {
     : "/";
 }
 
-const BAD_LOGIN = "Wrong username or password.";
+/** Separate messages per cause, so a setup problem doesn't look like a typo. */
+function signInMessage(code: string | undefined, status: number | undefined): string {
+  switch (code) {
+    case "invalid_credentials":
+      return "Wrong password.";
+    case "email_not_confirmed":
+      return "This account's email isn't marked as confirmed in Supabase yet.";
+    case "email_provider_disabled":
+    case "provider_disabled":
+      return "Password sign-in is turned off in Supabase (Email provider).";
+    case "user_banned":
+      return "This account is blocked in Supabase.";
+    case "captcha_failed":
+      return "Supabase has captcha turned on, which this sign-in form doesn't support.";
+  }
+  if (status === 429) return "Too many attempts. Wait a few minutes, then try again.";
+  return `Sign-in failed (${code ?? status ?? "unknown error"}). Try again.`;
+}
 
 /**
  * Username + password, no email involved. Supabase still keys accounts by
@@ -40,18 +57,15 @@ export async function signIn(prev: FormState, formData: FormData): Promise<FormS
       // Most likely the username_login migration hasn't been applied.
       return { error: "Usernames aren't set up yet. Sign in with your email instead." };
     }
-    if (!data) return { error: BAD_LOGIN };
+    if (!data) return { error: `No account has the username "${login}".` };
     email = data;
   }
 
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) {
-    return {
-      error:
-        error.status === 429
-          ? "Too many attempts. Wait a few minutes, then try again."
-          : BAD_LOGIN,
-    };
+    // Logged so the real cause shows up in the server logs.
+    console.error("signInWithPassword failed", error.status, error.code, error.message);
+    return { error: signInMessage(error.code, error.status) };
   }
 
   redirect(next);
