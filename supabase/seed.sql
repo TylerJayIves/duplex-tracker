@@ -10,7 +10,7 @@
 -- d=attachments
 
 -- ============================================================================
--- Two real logins (magic-link, no password) -- inserting straight into
+-- Two real logins (local password "duplex-dev"; usernames tyler / elle) -- inserting straight into
 -- auth.users/auth.identities is an unofficial-but-common local-dev-only
 -- pattern (verified against this CLI's actual schema via `\d auth.users` /
 -- `\d auth.identities` before writing this). Never do this against a hosted
@@ -24,11 +24,11 @@ insert into auth.users (
   email_change_token_new, recovery_token
 ) values
   ('00000000-0000-0000-0000-000000000000', '10000000-0000-0000-0000-000000000001',
-   'authenticated', 'authenticated', 'tyler@example.com', '',
+   'authenticated', 'authenticated', 'tyler@example.com', extensions.crypt('duplex-dev', extensions.gen_salt('bf')),
    now(), '{"provider":"email","providers":["email"]}', '{"name":"Tyler"}',
    now(), now(), '', '', '', ''),
   ('00000000-0000-0000-0000-000000000000', '10000000-0000-0000-0000-000000000002',
-   'authenticated', 'authenticated', 'jamie@example.com', '',
+   'authenticated', 'authenticated', 'jamie@example.com', extensions.crypt('duplex-dev', extensions.gen_salt('bf')),
    now(), '{"provider":"email","providers":["email"]}', '{"name":"Elle"}',
    now(), now(), '', '', '', '')
 on conflict (id) do nothing;
@@ -50,6 +50,9 @@ insert into public.users (id, email, name) values
   ('10000000-0000-0000-0000-000000000001', 'tyler@example.com', 'Tyler'),
   ('10000000-0000-0000-0000-000000000002', 'jamie@example.com', 'Elle')
 on conflict (id) do nothing;
+
+-- The username_login migration ran before these rows existed.
+update public.users set username = lower(name) where username is null;
 
 -- ============================================================================
 -- Domain data
