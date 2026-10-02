@@ -56,3 +56,27 @@ through it. Existing accounts are not affected.
 ```sql
 update public.users set username = 'newname' where username = 'oldname';
 ```
+
+## 3. Members-only data access
+
+Run `migrations/20261002000000_members_only.sql` in the SQL Editor (or
+`supabase db push`). Afterwards only accounts with a row in `public.users`
+can read or change anything, so an extra account that slips in sees nothing.
+
+Check it worked. This should return no rows (no policy left that lets any
+signed-in account in):
+
+```sql
+select schemaname, tablename, policyname
+from pg_policies
+where schemaname in ('public', 'storage')
+  and roles @> array['authenticated']::name[]
+  and (qual is null or qual not like '%is_member%')
+  and cmd <> 'SELECT';
+```
+
+And this lists every account that exists. It should be just the two of you:
+
+```sql
+select email, created_at, last_sign_in_at from auth.users order by created_at;
+```
