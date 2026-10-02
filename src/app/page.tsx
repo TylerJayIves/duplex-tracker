@@ -134,18 +134,28 @@ export default async function DashboardPage() {
       .map(([status, count]) => `${count} ${STATUS_LABEL[status]}`)
       .join(" · ") || "No projects yet";
 
-  // Scoped to area-level budgets only: areas partition projects (each
-  // project belongs to exactly one area), so summing across them can't
-  // double-count. Property- and project-level budgets can overlap an area
-  // budget's scope, so folding them into this same sum would double-count
-  // any cost item covered by more than one budget -- they still get their
-  // own "Over budget" attention item below, just not summed here.
-  const areaBudgetSpends = budgetSpends.filter((bs) => bs.budget.relatedType === "area");
-  const totalLimitCents = areaBudgetSpends.reduce((sum, bs) => sum + bs.budget.limitCents, 0);
-  const totalCommittedCents = areaBudgetSpends.reduce(
-    (sum, bs) => sum + bs.spend.committedCents,
+  // The spend figure counts every cost item on every project, not just the
+  // ones covered by a budget: each cost item belongs to exactly one project,
+  // so this can't double-count, and it matches what the project pages add
+  // up to. An item counts at its actual cost once that's entered, otherwise
+  // at its estimate.
+  const allCostItems = projectBundles.flatMap((b) => b.costItems);
+  const actualSpentCents = allCostItems.reduce(
+    (sum, c) => sum + (c.actualCostCents ?? 0),
     0
   );
+  const estimatedOnlyCents = allCostItems.reduce(
+    (sum, c) => sum + (c.actualCostCents == null ? c.estimatedCostCents : 0),
+    0
+  );
+  const totalCommittedCents = actualSpentCents + estimatedOnlyCents;
+
+  // The limit side stays scoped to area-level budgets: areas partition
+  // projects, so their limits can be summed. Property- and project-level
+  // budgets overlap an area budget's scope, so adding their limits would
+  // double-count -- they still get their own "Over budget" attention item.
+  const areaBudgetSpends = budgetSpends.filter((bs) => bs.budget.relatedType === "area");
+  const totalLimitCents = areaBudgetSpends.reduce((sum, bs) => sum + bs.budget.limitCents, 0);
 
   const { done: checklistDone, total: checklistTotal } = checklistTotals(
     projectBundles.map((b) => b.tasks)
@@ -248,6 +258,8 @@ export default async function DashboardPage() {
           totalProjects={projects.length}
           statusBreakdown={statusBreakdown}
           committedCents={totalCommittedCents}
+          actualSpentCents={actualSpentCents}
+          estimatedOnlyCents={estimatedOnlyCents}
           budgetLimitCents={totalLimitCents}
           budgetCount={areaBudgetSpends.length}
           checklistDone={checklistDone}
