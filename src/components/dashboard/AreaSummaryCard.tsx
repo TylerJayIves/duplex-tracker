@@ -15,11 +15,14 @@ import type { Area, Project } from "@/lib/data/types";
 export function AreaSummaryCard({
   area,
   projects,
+  isComplete,
   budget,
   checklist,
 }: {
   area: Area;
   projects: Project[];
+  /** Every project in this area is done; the card is shown muted. */
+  isComplete: boolean;
   budget: { limitCents: number; committedCents: number } | null;
   checklist: { done: number; total: number } | null;
 }) {
@@ -28,9 +31,16 @@ export function AreaSummaryCard({
   const hasRent = rentCents != null && rentCents > 0;
 
   return (
-    <Card className="flex flex-col gap-4">
+    <Card className={cn("flex flex-col gap-4", isComplete && "opacity-70")}>
       <div>
-        <h3 className="font-heading text-xl font-semibold">{area.name}</h3>
+        <div className="flex flex-wrap items-center gap-2">
+          <h3 className="font-heading text-xl font-semibold">{area.name}</h3>
+          {isComplete && (
+            <span className="bg-moss-soft px-1.5 py-0.5 font-mono text-[0.64rem] tracking-wide text-moss uppercase">
+              ✓ Complete
+            </span>
+          )}
+        </div>
         {area.type === "rental_unit" &&
           (isEditing ? (
             <div className="mt-2">
@@ -78,6 +88,7 @@ export function AreaSummaryCard({
         <ul className="space-y-2">
           {projects.map((project) => {
             const color = projectColorConfig(project.color);
+            const isDone = project.status === "done";
             return (
               <li key={project.id}>
                 <Link
@@ -91,7 +102,14 @@ export function AreaSummaryCard({
                         aria-hidden="true"
                       />
                     )}
-                    <span className="min-w-0 truncate">{project.title}</span>
+                    <span
+                      className={cn(
+                        "min-w-0 truncate",
+                        isDone && "text-ink-soft line-through"
+                      )}
+                    >
+                      {project.title}
+                    </span>
                   </span>
                   <StatusPill status={project.status} />
                 </Link>

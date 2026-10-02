@@ -16,7 +16,7 @@ import {
   sortAttentionItems,
 } from "@/lib/domain/dashboard";
 import { formatCents } from "@/lib/format";
-import type { ProjectStatus } from "@/lib/data/types";
+import type { Area, ProjectStatus } from "@/lib/data/types";
 
 const STATUS_LABEL: Record<ProjectStatus, string> = {
   idea: "idea",
@@ -99,19 +99,29 @@ export default async function DashboardPage() {
   const units = areas.filter((a) => a.type === "rental_unit");
   const externalAreas = areas.filter((a) => a.type !== "rental_unit");
 
-  const unitCards = units.map((area) => ({
-    area,
-    projects: projects.filter((p) => p.areaId === area.id),
-    budget: budgetForArea(area.id),
-    checklist: checklistForArea(area.id),
-  }));
+  // Finished work sinks to the bottom: done projects go last within each
+  // card, and cards whose projects are all done go last within their
+  // section. sort() is stable, so everything else keeps its original order.
+  function buildAreaCards(areaList: Area[]) {
+    return areaList
+      .map((area) => {
+        const areaProjects = projects
+          .filter((p) => p.areaId === area.id)
+          .sort((a, b) => Number(a.status === "done") - Number(b.status === "done"));
+        return {
+          area,
+          projects: areaProjects,
+          isComplete:
+            areaProjects.length > 0 && areaProjects.every((p) => p.status === "done"),
+          budget: budgetForArea(area.id),
+          checklist: checklistForArea(area.id),
+        };
+      })
+      .sort((a, b) => Number(a.isComplete) - Number(b.isComplete));
+  }
 
-  const externalCards = externalAreas.map((area) => ({
-    area,
-    projects: projects.filter((p) => p.areaId === area.id),
-    budget: budgetForArea(area.id),
-    checklist: checklistForArea(area.id),
-  }));
+  const unitCards = buildAreaCards(units);
+  const externalCards = buildAreaCards(externalAreas);
 
   // ---- KPIs ----
   const activeProjects = projects.filter((p) => p.status !== "done").length;
