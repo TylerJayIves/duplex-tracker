@@ -7,6 +7,8 @@ export function KpiStrip({
   totalProjects,
   statusBreakdown,
   committedCents,
+  actualSpentCents,
+  estimatedOnlyCents,
   budgetLimitCents,
   budgetCount,
   checklistDone,
@@ -18,6 +20,8 @@ export function KpiStrip({
   totalProjects: number;
   statusBreakdown: string;
   committedCents: number;
+  actualSpentCents: number;
+  estimatedOnlyCents: number;
   budgetLimitCents: number;
   budgetCount: number;
   checklistDone: number;
@@ -54,7 +58,10 @@ export function KpiStrip({
         </p>
         <ProgressBar pct={budgetHealth.pct} level={budgetHealth.level} />
         <p className="text-xs text-ink-soft">
-          Across {budgetCount} budget{budgetCount === 1 ? "" : "s"}
+          {formatCents(actualSpentCents)} actual · {formatCents(estimatedOnlyCents)} estimated
+        </p>
+        <p className="text-xs text-ink-soft">
+          Limit from {budgetCount} area budget{budgetCount === 1 ? "" : "s"}
         </p>
       </div>
 
