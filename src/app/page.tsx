@@ -124,9 +124,12 @@ export default async function DashboardPage() {
   const externalCards = buildAreaCards(externalAreas);
 
   // ---- KPIs ----
-  // "Active" means work that's actually under way. Ideas, planned and
-  // blocked projects still show up in the breakdown line below the number.
-  const activeProjects = projects.filter((p) => p.status === "in_progress").length;
+  // "Active" means work that has started: in progress, or started but
+  // blocked. Ideas and planned projects still show up in the breakdown line
+  // below the number.
+  const activeProjects = projects.filter(
+    (p) => p.status === "in_progress" || p.status === "blocked"
+  ).length;
   const statusCounts = projects.reduce((acc, p) => {
     acc.set(p.status, (acc.get(p.status) ?? 0) + 1);
     return acc;
