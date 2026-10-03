@@ -1,0 +1,244 @@
+/*
+ * The "fun" layout's skin. Every rule is scoped to <html data-layout="fun">,
+ * so the classic layout never sees any of it. The pages and components are
+ * shared between the two layouts: most of the change comes from swapping
+ * the color/font/radius tokens that every component already reads, plus a
+ * few structural rules below (rules outside @layer win over Tailwind's
+ * utilities, which is what lets them restyle shared components).
+ */
+
+:root[data-layout="fun"] {
+  --app-font-sans: var(--font-nunito), "Trebuchet MS", sans-serif;
+  --app-font-heading: var(--font-fredoka), var(--font-nunito), sans-serif;
+  /* Labels and numbers used a monospace face; Nunito keeps tabular digits. */
+  --app-font-mono: var(--font-nunito), "Trebuchet MS", sans-serif;
+
+  --background: #fff6e6;
+  --foreground: #2b2340;
+  --ink-soft: #675d7d;
+  --paper-raised: #fffdf8;
+  --card: #ffffff;
+  --popover: #ffffff;
+
+  --primary: #f0476a;
+  --primary-foreground: #ffffff;
+  --accent: #ffe08a;
+  --accent-foreground: #2b2340;
+
+  --destructive: #d93a2f;
+  --brick-soft: #ffe0db;
+  --moss: #1f9a63;
+  --moss-soft: #d3f5e2;
+  --amber: #c67700;
+  --amber-soft: #ffedc2;
+
+  --border: #e6d9c2;
+  --input: #cdbfa5;
+  --ring: #7b5cff;
+  --radius: 0.7rem;
+
+  --project-indigo: #5466f0;
+  --project-plum: #a443c9;
+  --project-rose: #ec4b86;
+  --project-slate: #4f6f91;
+  --project-mustard: #c99a00;
+  --project-denim: #2382d8;
+
+  /* layout-only tokens */
+  --fun-shadow: #2b2340;
+  --fun-dots: #f0476a22;
+  --fun-pop-1: #f0476a;
+  --fun-pop-2: #7b5cff;
+  --fun-pop-3: #1fb58a;
+  --fun-pop-4: #ffb81f;
+}
+
+:root[data-layout="fun"].dark {
+  --background: #1c1630;
+  --foreground: #f6f0ff;
+  --ink-soft: #b8acd6;
+  --paper-raised: #2a2247;
+  --card: #2a2247;
+  --popover: #2a2247;
+
+  --primary: #ff7d97;
+  --primary-foreground: #1c1630;
+  --accent: #43357a;
+  --accent-foreground: #f6f0ff;
+
+  --destructive: #ff8a7a;
+  --brick-soft: #4a2230;
+  --moss: #5fdca0;
+  --moss-soft: #1b3d32;
+  --amber: #ffc457;
+  --amber-soft: #463818;
+
+  --border: #43386d;
+  --input: #574a8a;
+  --ring: #a88cff;
+
+  --project-indigo: #8f9cff;
+  --project-plum: #d68bf0;
+  --project-rose: #ff8fb6;
+  --project-slate: #9db6d1;
+  --project-mustard: #f1cc4d;
+  --project-denim: #78bdf5;
+
+  --fun-shadow: #0b0816;
+  --fun-dots: #ffffff12;
+  --fun-pop-1: #ff7d97;
+  --fun-pop-2: #a88cff;
+  --fun-pop-3: #5fdca0;
+  --fun-pop-4: #ffc457;
+}
+
+/* Polka-dot paper. */
+[data-layout="fun"] body {
+  background-image: radial-gradient(var(--fun-dots) 1.5px, transparent 1.6px);
+  background-size: 22px 22px;
+}
+
+[data-layout="fun"] h1 {
+  letter-spacing: -0.01em;
+}
+[data-layout="fun"] h2 {
+  font-weight: 700;
+}
+
+/* Sticker cards: chunky outline, hard offset shadow, a colored cap that
+   cycles through four colors. */
+[data-layout="fun"] [data-slot="card"] {
+  border: 2px solid var(--fun-shadow);
+  border-top-width: 6px;
+  border-top-color: var(--fun-pop-1);
+  border-radius: 1.25rem;
+  box-shadow: 4px 4px 0 var(--fun-shadow);
+}
+[data-layout="fun"].dark [data-slot="card"] {
+  border-color: var(--border);
+  border-top-color: var(--fun-pop-1);
+}
+[data-layout="fun"] [data-slot="card"]:nth-child(4n + 2) {
+  border-top-color: var(--fun-pop-2);
+}
+[data-layout="fun"] [data-slot="card"]:nth-child(4n + 3) {
+  border-top-color: var(--fun-pop-3);
+}
+[data-layout="fun"] [data-slot="card"]:nth-child(4n + 4) {
+  border-top-color: var(--fun-pop-4);
+}
+/* Project cards already carry their own color on the left edge. */
+[data-layout="fun"] [data-slot="card"][class*="border-l-project-"] {
+  border-left-width: 8px;
+}
+[data-layout="fun"] a[data-slot="card"],
+[data-layout="fun"] a > [data-slot="card"] {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+[data-layout="fun"] a[data-slot="card"]:hover,
+[data-layout="fun"] a:hover > [data-slot="card"] {
+  transform: translate(-2px, -2px) rotate(-0.4deg);
+  box-shadow: 6px 6px 0 var(--fun-shadow);
+}
+
+/* Plain bordered panels that aren't <Card>s (dashboard sidebar, KPI strip,
+   callouts, inline forms) get the same rounded, outlined treatment. */
+[data-layout="fun"] main :is(.border.border-border.bg-card, .border.bg-border.gap-px, [data-slot="quote-card"]) {
+  border: 2px solid var(--fun-shadow);
+  border-radius: 1.25rem;
+  box-shadow: 4px 4px 0 var(--fun-shadow);
+  overflow: hidden;
+}
+[data-layout="fun"].dark main :is(.border.border-border.bg-card, .border.bg-border.gap-px, [data-slot="quote-card"]) {
+  border-color: var(--border);
+}
+[data-layout="fun"] main [data-slot="quote-card"] {
+  background-color: var(--card);
+}
+[data-layout="fun"] main .border-l-4 {
+  border-radius: 1rem;
+}
+[data-layout="fun"] main :is(.border-dashed, .bg-paper-raised.border) {
+  border-radius: 1rem;
+}
+
+/* Plain outlined buttons (e.g. on the Account page) become pills. */
+[data-layout="fun"] main button.border.uppercase {
+  border-radius: 999px;
+}
+
+/* Small uppercase labels: bolder, since they're no longer monospace. */
+[data-layout="fun"] .font-mono.uppercase {
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+/* Badges and status pills (small colored uppercase spans) become pills. */
+[data-layout="fun"] span.uppercase[class*="bg-"] {
+  border-radius: 999px;
+  padding-inline: 0.6rem;
+}
+
+/* Fat, rounded progress bars with candy stripes. */
+[data-layout="fun"] [role="progressbar"] {
+  height: 0.6rem;
+  border-radius: 999px;
+  background-color: var(--border);
+}
+[data-layout="fun"] [role="progressbar"] > div {
+  border-radius: 999px;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    #ffffff33 0 6px,
+    transparent 6px 12px
+  );
+}
+
+/* Form fields get rounded corners too. */
+[data-layout="fun"]
+  :is(input:not([type="checkbox"], [type="radio"], [type="file"]), textarea, select) {
+  border-radius: 0.6rem;
+}
+[data-layout="fun"] [data-slot="checkbox"] {
+  width: 1.2rem;
+  height: 1.2rem;
+  border-width: 2px;
+  border-radius: 0.4rem;
+}
+
+/* Header rules under page titles become a dashed candy line. */
+[data-layout="fun"] main .border-b-2.border-ink {
+  border-bottom-style: dashed;
+  border-bottom-color: var(--primary);
+}
+
+/* Hover wiggle for the shell's buttons and links. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-layout="fun"] .fun-wiggle {
+    transition: transform 0.15s ease;
+  }
+  [data-layout="fun"] .fun-wiggle:hover {
+    transform: rotate(-3deg) scale(1.04);
+  }
+}
+
+/* Confetti bits spawned by components/layout/fun/Confetti.tsx. */
+.fun-confetti {
+  position: fixed;
+  z-index: 100;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  pointer-events: none;
+  animation: fun-confetti 0.9s ease-out forwards;
+}
+@keyframes fun-confetti {
+  from {
+    transform: translate(-50%, -50%) rotate(0);
+    opacity: 1;
+  }
+  to {
+    transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy) + 60px))
+      rotate(var(--spin));
+    opacity: 0;
+  }
+}
