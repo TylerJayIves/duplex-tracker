@@ -48,10 +48,6 @@
   --fun-track: #e6d9c2;
   --fun-shadow: #2b2340;
   --fun-dots: #f0476a22;
-  --fun-pop-1: #f0476a;
-  --fun-pop-2: #7b5cff;
-  --fun-pop-3: #1fb58a;
-  --fun-pop-4: #ffb81f;
 }
 
 :root[data-layout="fun"].dark {
@@ -90,10 +86,6 @@
   --fun-track: #433a75;
   --fun-shadow: #8a7cc8;
   --fun-dots: #ffffff10;
-  --fun-pop-1: #ff8fa6;
-  --fun-pop-2: #b9a3ff;
-  --fun-pop-3: #6fe6ad;
-  --fun-pop-4: #ffcc66;
 }
 
 /* Polka-dot paper. */
@@ -109,27 +101,34 @@
   font-weight: 700;
 }
 
-/* Sticker cards: chunky outline, hard offset shadow, a colored cap that
-   cycles through four colors. */
+/* Sticker cards: chunky outline and a hard offset shadow. */
 [data-layout="fun"] [data-slot="card"] {
   border: 2px solid var(--fun-shadow);
-  border-top-width: 6px;
-  border-top-color: var(--fun-pop-1);
   border-radius: 1.25rem;
   box-shadow: 4px 4px 0 var(--fun-shadow);
 }
-[data-layout="fun"] [data-slot="card"]:nth-child(4n + 2) {
-  border-top-color: var(--fun-pop-2);
-}
-[data-layout="fun"] [data-slot="card"]:nth-child(4n + 3) {
-  border-top-color: var(--fun-pop-3);
-}
-[data-layout="fun"] [data-slot="card"]:nth-child(4n + 4) {
-  border-top-color: var(--fun-pop-4);
-}
-/* Project cards already carry their own color on the left edge. */
+/* Project cards keep their chosen project color on a thick left edge (the
+   outline rule above would otherwise repaint it). */
 [data-layout="fun"] [data-slot="card"][class*="border-l-project-"] {
-  border-left-width: 8px;
+  border-left-width: 12px;
+}
+[data-layout="fun"] [data-slot="card"].border-l-project-indigo {
+  border-left-color: var(--project-indigo);
+}
+[data-layout="fun"] [data-slot="card"].border-l-project-plum {
+  border-left-color: var(--project-plum);
+}
+[data-layout="fun"] [data-slot="card"].border-l-project-rose {
+  border-left-color: var(--project-rose);
+}
+[data-layout="fun"] [data-slot="card"].border-l-project-slate {
+  border-left-color: var(--project-slate);
+}
+[data-layout="fun"] [data-slot="card"].border-l-project-mustard {
+  border-left-color: var(--project-mustard);
+}
+[data-layout="fun"] [data-slot="card"].border-l-project-denim {
+  border-left-color: var(--project-denim);
 }
 [data-layout="fun"] a[data-slot="card"],
 [data-layout="fun"] a > [data-slot="card"] {
