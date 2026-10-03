@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { NavLink } from "./NavLink";
 import { ThemeToggle } from "./ThemeToggle";
+import { LayoutSwitch } from "./LayoutSwitch";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import { signOut } from "@/lib/actions/auth";
 
@@ -47,6 +48,14 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
                   Sign out
                 </button>
               </form>
+            )}
+            {user && (
+              <LayoutSwitch
+                to="fun"
+                className="border border-border px-2 py-1 font-mono text-[0.68rem] tracking-wide text-ink-soft uppercase hover:text-ink"
+              >
+                Fun
+              </LayoutSwitch>
             )}
             <ThemeToggle />
           </div>
