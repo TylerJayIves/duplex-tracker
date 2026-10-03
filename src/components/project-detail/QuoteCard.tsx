@@ -25,7 +25,7 @@ export function QuoteCard({
   const [isEditing, setIsEditing] = useState(false);
 
   return (
-    <div className="border border-border p-4">
+    <div data-slot="quote-card" className="border border-border p-4">
       <div className="flex items-start justify-between gap-2">
         <div>
           <p className="font-heading font-semibold">
