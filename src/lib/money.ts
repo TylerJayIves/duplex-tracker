@@ -6,15 +6,16 @@
  * most 2 decimal places.
  */
 export function parseCentsInput(raw: string): number | null {
-  const trimmed = raw.trim().replace(/[$,]/g, "");
+  const trimmed = raw.trim().replace(/\$/g, "");
   if (trimmed === "") return null;
 
-  const match = /^(\d+)(?:\.(\d{0,2}))?$/.exec(trimmed);
+  const match = /^(\d+|\d{1,3}(?:,\d{3})+)(?:\.(\d{0,2}))?$/.exec(trimmed);
   if (!match) return null;
 
   const [, wholePart, fractionPart = ""] = match;
+  const wholeDigits = wholePart.replace(/,/g, ""); // Remove Commas after input match has taken place TI 09/10/26
   const cents = fractionPart.padEnd(2, "0");
-  const totalCents = Number(wholePart) * 100 + Number(cents);
+  const totalCents = Number(wholeDigits) * 100 + Number(cents);
 
   return Number.isSafeInteger(totalCents) ? totalCents : null;
 }
