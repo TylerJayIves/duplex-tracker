@@ -48,4 +48,13 @@ describe("getBudgetHealth", () => {
     expect(result.pct).toBeCloseTo(84.8);
     expect(result.remainingCents).toBe(152);
   });
+
+  it("should be good at 0", () => {
+    const limit = 0;
+    const spent = 0;
+
+    const result = getBudgetHealth(limit, spent);
+
+    expect(result.level).toBe("good");
+  });
 });
