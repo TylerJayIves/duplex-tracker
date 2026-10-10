@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { parseCentsInput } from "./money";
+import { parseCentsInput, centsToInputValue } from "./money";
 
 describe("parseCentsInput", () => {
   describe("whole dollars", () => {
@@ -177,5 +177,23 @@ describe("parseCentsInput", () => {
 
       expect(result).toBeNull();
     });
+  });
+});
+
+describe("centsToInputValue", () => {
+  it("Returns expected Dollar Amount when provided Cent Input", () => {
+    const raw = 32500;
+
+    const result = centsToInputValue(raw);
+
+    expect(result).toBe("325.00");
+  });
+
+  it("Returns negative dollar amount if bad data is provided", () => {
+    const raw = -500;
+
+    const result = centsToInputValue(raw);
+
+    expect(result).toBe("-5.00");
   });
 });
