@@ -13,7 +13,7 @@ export function parseCentsInput(raw: string): number | null {
   if (!match) return null;
 
   const [, wholePart, fractionPart = ""] = match;
-  const wholeDigits = wholePart.replace(/,/g, ""); // Remove Commas after input match has taken place TI 09/10/26
+  const wholeDigits = wholePart.replace(/,/g, ""); // Safe to strip now: the regex has already validated comma placement.
   const cents = fractionPart.padEnd(2, "0");
   const totalCents = Number(wholeDigits) * 100 + Number(cents);
 
