@@ -10,7 +10,7 @@ const ATTENTION_THRESHOLD = 0.85;
 
 export function getBudgetHealth(
   limitCents: number,
-  committedCents: number
+  committedCents: number,
 ): BudgetHealth {
   const pct = limitCents === 0 ? 0 : (committedCents / limitCents) * 100;
   const level: BudgetHealthLevel =
