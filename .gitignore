@@ -23,8 +23,7 @@
 # misc
 .DS_Store
 *.pem
-LOGIN_SETUP.md 
-.sql
+
 # debug
 npm-debug.log*
 yarn-debug.log*
