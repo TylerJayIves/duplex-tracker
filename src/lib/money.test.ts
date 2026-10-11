@@ -181,7 +181,7 @@ describe("parseCentsInput", () => {
 });
 
 describe("centsToInputValue", () => {
-  it("Returns expected Dollar Amount when provided Cent Input", () => {
+  it("formats cents as a plain decimal dollar string", () => {
     const raw = 32500;
 
     const result = centsToInputValue(raw);
@@ -189,11 +189,43 @@ describe("centsToInputValue", () => {
     expect(result).toBe("325.00");
   });
 
-  it("Returns negative dollar amount if bad data is provided", () => {
+  it("returns negative dollar amount if negative data is provided", () => {
     const raw = -500;
 
     const result = centsToInputValue(raw);
 
     expect(result).toBe("-5.00");
+  });
+
+  it("returns empty string when cents is null", () => {
+    const raw = null;
+
+    const result = centsToInputValue(raw);
+
+    expect(result).toBe("");
+  });
+
+  it("formats small negative amounts with a leading zero", () => {
+    const raw = -5;
+
+    const result = centsToInputValue(raw);
+
+    expect(result).toBe("-0.05");
+  });
+
+  it("returns accurate data by padding single-digit cents with a leading zero", () => {
+    const raw = 5;
+
+    const result = centsToInputValue(raw);
+
+    expect(result).toBe("0.05");
+  });
+
+  it.each([0, 5, 99, 1999, 125_000_000])("round-trips %i cents", (cents) => {
+    const asString = centsToInputValue(cents);
+
+    const backToCents = parseCentsInput(asString);
+
+    expect(backToCents).toBe(cents);
   });
 });
