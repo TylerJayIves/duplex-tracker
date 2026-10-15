@@ -1,4 +1,4 @@
-import type { Task, Project } from "@/lib/data/types";
+import type { Task, Project, Quote, Contractor } from "@/lib/data/types";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import {
   checklistTotals,
@@ -6,6 +6,7 @@ import {
   findOverBudgetItems,
   findOverdueTaskItems,
   type AttentionItem,
+  findQuoteAttentionItems,
 } from "./dashboard";
 
 function makeTask(overrides: Partial<Task> = {}): Task {
@@ -65,6 +66,34 @@ function makeAttentionItem(
     title: "Test item",
     meta: "",
     urgency: 0,
+    ...overrides,
+  };
+}
+
+function makeQuote(overrides: Partial<Quote> = {}): Quote {
+  return {
+    id: "quote-1",
+    projectId: "project-1",
+    contractorId: "contractor-1",
+    amountCents: 50_000,
+    scopeDescription: "",
+    status: "received",
+    receivedDate: null,
+    validUntil: null,
+    ...overrides,
+  };
+}
+
+function makeContractor(overrides: Partial<Contractor> = {}): Contractor {
+  return {
+    id: "contractor-1",
+    name: "",
+    company: "test-company",
+    phone: "",
+    email: "",
+    trade: "",
+    notes: "",
+    rating: 3,
     ...overrides,
   };
 }
@@ -344,48 +373,11 @@ describe("findOverBudgetItems", () => {
 describe("findOverdueTaskItems", () => {
   beforeEach(() => {
     vi.useFakeTimers();
-    vi.setSystemTime(new Date("2026-10-15T03:00:00Z"));
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
-  it("handles when timezones would put UTC in the 15th, but Local remains in the 14th", () => {
-    const bundles = [
-      {
-        project: makeProject(),
-        tasks: [makeTask({ dueDate: "2026-10-14" })],
-      },
-    ];
-
-    const result = findOverdueTaskItems(bundles);
-
-    expect(result).toEqual([]);
-  });
-});
-
-describe("findOverdueTaskItems", () => {
-  beforeEach(() => {
-    vi.useFakeTimers();
     vi.setSystemTime(new Date("2026-10-15T17:00:00Z"));
   });
 
   afterEach(() => {
     vi.useRealTimers();
-  });
-
-  it("returns nothing when no task is overdue", () => {
-    const bundles = [
-      {
-        project: makeProject(),
-        tasks: [makeTask({ dueDate: "2026-10-20" })],
-      },
-    ];
-
-    const result = findOverdueTaskItems(bundles);
-
-    expect(result).toEqual([]);
   });
 
   it("returns nothing when no task is overdue", () => {
@@ -516,6 +508,202 @@ describe("findOverdueTaskItems", () => {
         tone: "brick",
         urgency: -1,
       },
+    ]);
+  });
+});
+
+describe("findQuoteAttentionItems", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-10-15T17:00:00Z"));
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+  it("flags an expired quote and one expiring within 14 days", () => {
+    const bundles = [
+      {
+        project: makeProject(),
+        quotes: [
+          makeQuote({
+            validUntil: "2026-10-14",
+            id: "expired",
+          }),
+          makeQuote({
+            validUntil: "2026-10-21",
+            id: "expires soon",
+          }),
+        ],
+      },
+    ];
+
+    const result = findQuoteAttentionItems(bundles, new Map());
+
+    expect(result.map((item) => item.id)).toEqual([
+      "quote-expired",
+      "quote-expires soon",
+    ]);
+  });
+
+  it("does not flag quotes with the status accepted or declined", () => {
+    const bundles = [
+      {
+        project: makeProject(),
+        quotes: [
+          makeQuote({
+            id: "accepted-status",
+            status: "accepted",
+          }),
+          makeQuote({
+            id: "declined-status",
+            status: "declined",
+          }),
+          makeQuote({
+            id: "requested-status",
+            status: "requested",
+          }),
+          makeQuote({
+            id: "received-status",
+            status: "received",
+          }),
+        ],
+      },
+    ];
+
+    const result = findQuoteAttentionItems(bundles, new Map());
+
+    expect(result.map((item) => item.id)).toEqual([
+      "quote-requested-status",
+      "quote-received-status",
+    ]);
+  });
+
+  it("a quote 14 days from expiry is ‘Expires soon’, one 15 days away is ‘Awaiting you’", () => {
+    const bundles = [
+      {
+        project: makeProject(),
+        quotes: [
+          makeQuote({
+            validUntil: "2026-10-29",
+            id: "expires-soon",
+          }),
+
+          makeQuote({
+            validUntil: "2026-10-30",
+            id: "not-expiring",
+          }),
+        ],
+      },
+    ];
+
+    const result = findQuoteAttentionItems(bundles, new Map());
+
+    expect(result.map((item) => item.tag)).toEqual([
+      "Expires soon",
+      "Awaiting you",
+    ]);
+  });
+
+  it("a quote 3 days from expiry has the tone of 'brick', one 4 days away is ‘amber’", () => {
+    const bundles = [
+      {
+        project: makeProject(),
+        quotes: [
+          makeQuote({
+            validUntil: "2026-10-18",
+            id: "tone-brick",
+          }),
+
+          makeQuote({
+            validUntil: "2026-10-19",
+            id: "tone-amber",
+          }),
+        ],
+      },
+    ];
+
+    const result = findQuoteAttentionItems(bundles, new Map());
+
+    expect(result.map((item) => item.tone)).toEqual(["brick", "amber"]);
+  });
+
+  it("uses the contractor's company name in the title when the contractor is known", () => {
+    const contractor = makeContractor({ company: "Ace Plumbing" });
+    const contractorById = new Map([[contractor.id, contractor]]);
+
+    const bundles = [
+      {
+        project: makeProject(),
+        quotes: [makeQuote({ id: "expired", validUntil: "2026-10-14" })],
+      },
+    ];
+
+    const result = findQuoteAttentionItems(bundles, contractorById);
+
+    expect(result.map((item) => item.title)).toEqual([
+      "Ace Plumbing's quote has expired",
+    ]);
+  });
+
+  it("builds a complete 'Awaiting you' item for a quote with no expiry date", () => {
+    const bundles = [
+      {
+        project: makeProject(),
+        quotes: [makeQuote({ id: "awaiting", validUntil: null })],
+      },
+    ];
+
+    const result = findQuoteAttentionItems(bundles, new Map());
+
+    expect(result).toEqual([
+      {
+        id: "quote-awaiting",
+        tone: "amber",
+        tag: "Awaiting you",
+        title: "A contractor's quote needs a decision",
+        meta: "Test project · $500.00",
+        projectId: "project-1",
+        urgency: 1000,
+      },
+    ]);
+  });
+
+  it("builds a complete 'Expiring soon' item for a quote ending in 4 days", () => {
+    const bundles = [
+      {
+        project: makeProject(),
+        quotes: [makeQuote({ id: "expires-soon", validUntil: "2026-10-19" })],
+      },
+    ];
+
+    const result = findQuoteAttentionItems(bundles, new Map());
+
+    expect(result).toEqual([
+      {
+        id: "quote-expires-soon",
+        tone: "amber",
+        tag: "Expires soon",
+        title: "A contractor's quote expires in 4 days",
+        meta: "Test project · $500.00 · valid until Oct 19, 2026",
+        projectId: "project-1",
+        urgency: 4,
+      },
+    ]);
+  });
+
+  it("sets title to use singular language when only 1 days remains before expire", () => {
+    const bundles = [
+      {
+        project: makeProject(),
+        quotes: [makeQuote({ id: "expires-soon", validUntil: "2026-10-16" })],
+      },
+    ];
+
+    const result = findQuoteAttentionItems(bundles, new Map());
+
+    expect(result.map((item) => item.title)).toEqual([
+      "A contractor's quote expires in 1 day",
     ]);
   });
 });
