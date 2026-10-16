@@ -406,6 +406,21 @@ describe("findOverdueTaskItems", () => {
     expect(result).toEqual([]);
   });
 
+  it("does not mark a task overdue early when it is already tomorrow in UTC", () => {
+    vi.setSystemTime(new Date("2026-10-15T03:00:00Z"));
+
+    const bundles = [
+      {
+        project: makeProject(),
+        tasks: [makeTask({ dueDate: "2026-10-14" })],
+      },
+    ];
+
+    const result = findOverdueTaskItems(bundles);
+
+    expect(result).toEqual([]);
+  });
+
   it("returns nothing when an overdue task is already done", () => {
     const bundles = [
       {
@@ -532,7 +547,7 @@ describe("findQuoteAttentionItems", () => {
           }),
           makeQuote({
             validUntil: "2026-10-21",
-            id: "expires soon",
+            id: "expires-soon",
           }),
         ],
       },
@@ -542,7 +557,7 @@ describe("findQuoteAttentionItems", () => {
 
     expect(result.map((item) => item.id)).toEqual([
       "quote-expired",
-      "quote-expires soon",
+      "quote-expires-soon",
     ]);
   });
 
@@ -628,6 +643,29 @@ describe("findQuoteAttentionItems", () => {
     expect(result.map((item) => item.tone)).toEqual(["brick", "amber"]);
   });
 
+  it("a boundary test of 0 days and 1 day from expiring", () => {
+    const bundles = [
+      {
+        project: makeProject(),
+        quotes: [
+          makeQuote({
+            validUntil: "2026-10-15",
+            id: "valid-today",
+          }),
+
+          makeQuote({
+            validUntil: "2026-10-14",
+            id: "valid-yesterday",
+          }),
+        ],
+      },
+    ];
+
+    const result = findQuoteAttentionItems(bundles, new Map());
+
+    expect(result.map((item) => item.tag)).toEqual(["Expires soon", "Expired"]);
+  });
+
   it("uses the contractor's company name in the title when the contractor is known", () => {
     const contractor = makeContractor({ company: "Ace Plumbing" });
     const contractorById = new Map([[contractor.id, contractor]]);
@@ -692,7 +730,7 @@ describe("findQuoteAttentionItems", () => {
     ]);
   });
 
-  it("sets title to use singular language when only 1 days remains before expire", () => {
+  it("sets title to use singular language when the quote expires in only 1 day.", () => {
     const bundles = [
       {
         project: makeProject(),
