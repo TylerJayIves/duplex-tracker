@@ -1,4 +1,13 @@
-import type { Task, Project, Quote, Contractor } from "@/lib/data/types";
+import type {
+  Task,
+  Project,
+  Quote,
+  Contractor,
+  Area,
+  User,
+  Comment,
+  Attachment,
+} from "@/lib/data/types";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import {
   checklistTotals,
@@ -7,6 +16,8 @@ import {
   findOverdueTaskItems,
   type AttentionItem,
   findQuoteAttentionItems,
+  buildActivityFeed,
+  buildUpcomingItems,
 } from "./dashboard";
 
 function makeTask(overrides: Partial<Task> = {}): Task {
@@ -94,6 +105,47 @@ function makeContractor(overrides: Partial<Contractor> = {}): Contractor {
     trade: "",
     notes: "",
     rating: 3,
+    ...overrides,
+  };
+}
+
+function makeArea(overrides: Partial<Area> = {}): Area {
+  return {
+    id: "area-1",
+    propertyId: "property-1",
+    name: "Test area",
+    type: "rental_unit",
+    targetRentCents: null,
+    targetReadyDate: null,
+    sharedAllocationPct: null,
+    ...overrides,
+  };
+}
+
+function makeUser(overrides: Partial<User> = {}): User {
+  return { id: "user-1", name: "Test user", email: "", ...overrides };
+}
+
+function makeComment(overrides: Partial<Comment> = {}): Comment {
+  return {
+    id: "comment-1",
+    projectId: "project-1",
+    authorId: "user-1",
+    text: "Test comment",
+    createdAt: "2026-10-15T12:00:00Z",
+    ...overrides,
+  };
+}
+
+function makeAttachment(overrides: Partial<Attachment> = {}): Attachment {
+  return {
+    id: "attachment-1",
+    relatedType: "project",
+    relatedId: "project-1",
+    fileUrl: "uploads/test-file.pdf",
+    caption: null,
+    uploadedById: "user-1",
+    uploadedAt: "2026-10-15T12:00:00Z",
     ...overrides,
   };
 }
@@ -742,6 +794,301 @@ describe("findQuoteAttentionItems", () => {
 
     expect(result.map((item) => item.title)).toEqual([
       "A contractor's quote expires in 1 day",
+    ]);
+  });
+});
+
+describe("buildActivityFeed", () => {
+  const user = makeUser({ name: "Tyler" });
+  const userById = new Map([[user.id, user]]);
+
+  it("builds a complete item for a comment", () => {
+    const comments = [
+      {
+        comment: makeComment({ text: "Tiles ordered" }),
+        projectTitle: "Kitchen",
+        projectId: "project-1",
+      },
+    ];
+
+    const result = buildActivityFeed(comments, [], userById);
+
+    expect(result).toEqual([
+      {
+        id: "comment-comment-1",
+        kind: "comment",
+        authorName: "Tyler",
+        projectTitle: "Kitchen",
+        projectId: "project-1",
+        when: "2026-10-15T12:00:00Z",
+        text: "Tiles ordered",
+      },
+    ]);
+  });
+
+  it("builds a complete item for an attachment", () => {
+    const attachments = [
+      {
+        attachment: makeAttachment({ caption: "Floor plan" }),
+        projectTitle: "Kitchen",
+        projectId: "project-1",
+      },
+    ];
+
+    const result = buildActivityFeed([], attachments, userById);
+
+    expect(result).toEqual([
+      {
+        id: "attachment-attachment-1",
+        kind: "attachment",
+        authorName: "Tyler",
+        projectTitle: "Kitchen",
+        projectId: "project-1",
+        when: "2026-10-15T12:00:00Z",
+        filename: "Floor plan",
+      },
+    ]);
+  });
+
+  it('uses "Unknown" when the author is not in the map', () => {
+    const comments = [
+      {
+        comment: makeComment(),
+        projectTitle: "Kitchen",
+        projectId: "project-1",
+      },
+    ];
+
+    const result = buildActivityFeed(comments, [], new Map());
+
+    expect(result.map((item) => item.authorName)).toEqual(["Unknown"]);
+  });
+
+  it("sorts comments and attachments together, newest first", () => {
+    const comments = [
+      {
+        comment: makeComment({
+          id: "oldest",
+          createdAt: "2026-10-13T12:00:00Z",
+        }),
+        projectTitle: "Kitchen",
+        projectId: "project-1",
+      },
+      {
+        comment: makeComment({
+          id: "newest",
+          createdAt: "2026-10-15T12:00:00Z",
+        }),
+        projectTitle: "Kitchen",
+        projectId: "project-1",
+      },
+    ];
+    const attachments = [
+      {
+        attachment: makeAttachment({
+          id: "middle",
+          uploadedAt: "2026-10-14T12:00:00Z",
+        }),
+        projectTitle: "Kitchen",
+        projectId: "project-1",
+      },
+    ];
+
+    const result = buildActivityFeed(comments, attachments, userById);
+
+    expect(result.map((item) => item.id)).toEqual([
+      "comment-newest",
+      "attachment-middle",
+      "comment-oldest",
+    ]);
+  });
+
+  describe("attachment filename", () => {
+    it("uses the caption when there is one", () => {
+      const attachments = [
+        {
+          attachment: makeAttachment({ caption: "Floor plan" }),
+          projectTitle: "Kitchen",
+          projectId: "project-1",
+        },
+      ];
+
+      const result = buildActivityFeed([], attachments, userById);
+
+      expect(result.map((item) => item.filename)).toEqual(["Floor plan"]);
+    });
+
+    it("falls back to the last part of the file URL when there is no caption", () => {
+      const attachments = [
+        {
+          attachment: makeAttachment({
+            caption: null,
+            fileUrl: "uploads/abc/quote.pdf",
+          }),
+          projectTitle: "Kitchen",
+          projectId: "project-1",
+        },
+      ];
+
+      const result = buildActivityFeed([], attachments, userById);
+
+      expect(result.map((item) => item.filename)).toEqual(["quote.pdf"]);
+    });
+
+    it("treats an empty caption like no caption", () => {
+      const attachments = [
+        {
+          attachment: makeAttachment({
+            caption: "",
+            fileUrl: "uploads/abc/quote.pdf",
+          }),
+          projectTitle: "Kitchen",
+          projectId: "project-1",
+        },
+      ];
+
+      const result = buildActivityFeed([], attachments, userById);
+
+      expect(result.map((item) => item.filename)).toEqual(["quote.pdf"]);
+    });
+
+    it('uses "file" when the URL ends in a slash', () => {
+      const attachments = [
+        {
+          attachment: makeAttachment({
+            caption: null,
+            fileUrl: "uploads/abc/",
+          }),
+          projectTitle: "Kitchen",
+          projectId: "project-1",
+        },
+      ];
+
+      const result = buildActivityFeed([], attachments, userById);
+
+      expect(result.map((item) => item.filename)).toEqual(["file"]);
+    });
+  });
+});
+
+describe("buildUpcomingItems", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-10-15T17:00:00Z"));
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("builds a complete 'ready for rent' item for a rental unit", () => {
+    const areas = [makeArea({ name: "A", targetReadyDate: "2026-11-01" })];
+
+    const result = buildUpcomingItems(areas, [], new Map());
+
+    expect(result).toEqual([
+      {
+        id: "area-area-1",
+        date: "2026-11-01",
+        what: "A ready for rent",
+        where: "Unit A",
+      },
+    ]);
+  });
+
+  it("leaves out areas that are not rental units", () => {
+    const areas = [
+      makeArea({
+        id: "garden",
+        type: "external",
+        targetReadyDate: "2026-11-01",
+      }),
+      makeArea({
+        id: "hallway",
+        type: "shared",
+        targetReadyDate: "2026-11-01",
+      }),
+    ];
+
+    const result = buildUpcomingItems(areas, [], new Map());
+
+    expect(result).toEqual([]);
+  });
+
+  it("leaves out a rental unit with no ready date", () => {
+    const areas = [makeArea({ targetReadyDate: null })];
+
+    const result = buildUpcomingItems(areas, [], new Map());
+
+    expect(result).toEqual([]);
+  });
+
+  it("includes a ready date of today but not yesterday", () => {
+    const areas = [
+      makeArea({ id: "today", targetReadyDate: "2026-10-15" }),
+      makeArea({ id: "yesterday", targetReadyDate: "2026-10-14" }),
+    ];
+
+    const result = buildUpcomingItems(areas, [], new Map());
+
+    expect(result.map((item) => item.id)).toEqual(["area-today"]);
+  });
+
+  it("builds a complete item for a project target, using its area's name", () => {
+    const area = makeArea({ id: "kitchen-area", name: "Kitchen" });
+    const projects = [
+      makeProject({
+        title: "New cabinets",
+        areaId: "kitchen-area",
+        targetEndDate: "2026-11-10",
+      }),
+    ];
+
+    const result = buildUpcomingItems([], projects, new Map([[area.id, area]]));
+
+    expect(result).toEqual([
+      {
+        id: "project-project-1",
+        date: "2026-11-10",
+        what: "New cabinets target",
+        where: "Kitchen",
+      },
+    ]);
+  });
+
+  it("leaves out projects that are done, have no target, or are past their target", () => {
+    const projects = [
+      makeProject({ id: "done", status: "done", targetEndDate: "2026-11-10" }),
+      makeProject({ id: "no-date", targetEndDate: null }),
+      makeProject({ id: "past", targetEndDate: "2026-10-14" }),
+    ];
+
+    const result = buildUpcomingItems([], projects, new Map());
+
+    expect(result).toEqual([]);
+  });
+
+  it("leaves 'where' empty when the project's area is not in the map", () => {
+    const projects = [makeProject({ targetEndDate: "2026-11-10" })];
+
+    const result = buildUpcomingItems([], projects, new Map());
+
+    expect(result.map((item) => item.where)).toEqual([""]);
+  });
+
+  it("sorts areas and projects together, earliest first", () => {
+    const areas = [makeArea({ id: "unit", targetReadyDate: "2026-12-01" })];
+    const projects = [
+      makeProject({ id: "late", targetEndDate: "2026-12-15" }),
+      makeProject({ id: "early", targetEndDate: "2026-10-20" }),
+    ];
+
+    const result = buildUpcomingItems(areas, projects, new Map());
+
+    expect(result.map((item) => item.id)).toEqual([
+      "project-early",
+      "area-unit",
+      "project-late",
     ]);
   });
 });
