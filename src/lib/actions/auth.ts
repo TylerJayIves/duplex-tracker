@@ -2,22 +2,14 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-
+import { safeNext } from "../auth/safe-next";
 export type FormState = { error?: string; ok?: boolean };
 
-/**
- * Only same-site paths -- `next` comes from the URL, so anything like
- * `//evil.com` or `https://...` must not become a redirect target.
- */
-function safeNext(value: FormDataEntryValue | null): string {
-  const next = String(value ?? "");
-  return next.startsWith("/") && !next.startsWith("//") && !next.startsWith("/\\")
-    ? next
-    : "/";
-}
-
 /** Separate messages per cause, so a setup problem doesn't look like a typo. */
-function signInMessage(code: string | undefined, status: number | undefined): string {
+function signInMessage(
+  code: string | undefined,
+  status: number | undefined,
+): string {
   switch (code) {
     case "invalid_credentials":
       return "Wrong password.";
@@ -32,8 +24,10 @@ function signInMessage(code: string | undefined, status: number | undefined): st
       return "Supabase has captcha turned on, which this sign-in form doesn't support.";
   }
   // supabase-js reports status 0 when the request never got an answer.
-  if (!status) return "Couldn't reach Supabase. Check NEXT_PUBLIC_SUPABASE_URL for this deployment.";
-  if (status === 429) return "Too many attempts. Wait a few minutes, then try again.";
+  if (!status)
+    return "Couldn't reach Supabase. Check NEXT_PUBLIC_SUPABASE_URL for this deployment.";
+  if (status === 429)
+    return "Too many attempts. Wait a few minutes, then try again.";
   return `Sign-in failed (${code ?? status ?? "unknown error"}). Try again.`;
 }
 
@@ -42,11 +36,15 @@ function signInMessage(code: string | undefined, status: number | undefined): st
  * email, so a username is first mapped to its account's email through the
  * `email_for_username` lookup. Typing the email itself also works.
  */
-export async function signIn(prev: FormState, formData: FormData): Promise<FormState> {
+export async function signIn(
+  prev: FormState,
+  formData: FormData,
+): Promise<FormState> {
   const login = String(formData.get("username") ?? "").trim();
   const password = String(formData.get("password") ?? "");
   const next = safeNext(formData.get("next"));
-  if (!login || !password) return { error: "Enter your username and password." };
+  if (!login || !password)
+    return { error: "Enter your username and password." };
 
   const supabase = await createClient();
 
@@ -57,7 +55,9 @@ export async function signIn(prev: FormState, formData: FormData): Promise<FormS
     });
     if (error) {
       // Most likely the username_login migration hasn't been applied.
-      return { error: "Usernames aren't set up yet. Sign in with your email instead." };
+      return {
+        error: "Usernames aren't set up yet. Sign in with your email instead.",
+      };
     }
     if (!data) return { error: `No account has the username "${login}".` };
     email = data;
@@ -66,7 +66,12 @@ export async function signIn(prev: FormState, formData: FormData): Promise<FormS
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) {
     // Logged so the real cause shows up in the server logs.
-    console.error("signInWithPassword failed", error.status, error.code, error.message);
+    console.error(
+      "signInWithPassword failed",
+      error.status,
+      error.code,
+      error.message,
+    );
     return { error: signInMessage(error.code, error.status) };
   }
 
@@ -75,7 +80,7 @@ export async function signIn(prev: FormState, formData: FormData): Promise<FormS
 
 export async function changePassword(
   prev: FormState,
-  formData: FormData
+  formData: FormData,
 ): Promise<FormState> {
   const password = String(formData.get("password") ?? "");
   const confirm = String(formData.get("confirm") ?? "");
