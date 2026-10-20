@@ -249,19 +249,16 @@ otp_length = 6
 # Number of seconds before the email OTP expires (defaults to 1 hour).
 otp_expiry = 3600
 
-# Use a production-ready SMTP server
-# Gmail SMTP relay via an app-specific password -- no domain verification
-# needed since the sending mailbox is already a real, Google-trusted
-# account. Free tier covers ~500 sends/day, far more than a 2-user app
-# needs.
-[auth.email.smtp]
-enabled = true
-host = "smtp.gmail.com"
-port = 465
-user = "custompropertytracking@gmail.com"
-pass = "env(GMAIL_APP_PASSWORD)"
-admin_email = "custompropertytracking@gmail.com"
-sender_name = "DuplexTracker"
+# Use a production-ready SMTP server. Not needed: sign-in is username +
+# password and the app never sends email.
+# [auth.email.smtp]
+# enabled = true
+# host = "smtp.sendgrid.net"
+# port = 587
+# user = "apikey"
+# pass = "env(SA_SMTP_PASSWORD)"
+# admin_email = "admin@email.com"
+# sender_name = "Admin"
 
 # Uncomment to customize email template
 # [auth.email.template.invite]
