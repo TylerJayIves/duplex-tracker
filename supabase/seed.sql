@@ -10,7 +10,7 @@
 -- d=attachments
 
 -- ============================================================================
--- Two real logins (local password "duplex-dev"; usernames tyler / elle) -- inserting straight into
+-- Two real logins (local password "duplex-dev"; usernames tyler / jamie) -- inserting straight into
 -- auth.users/auth.identities is an unofficial-but-common local-dev-only
 -- pattern (verified against this CLI's actual schema via `\d auth.users` /
 -- `\d auth.identities` before writing this). Never do this against a hosted
@@ -29,7 +29,7 @@ insert into auth.users (
    now(), now(), '', '', '', ''),
   ('00000000-0000-0000-0000-000000000000', '10000000-0000-0000-0000-000000000002',
    'authenticated', 'authenticated', 'jamie@example.com', extensions.crypt('duplex-dev', extensions.gen_salt('bf')),
-   now(), '{"provider":"email","providers":["email"]}', '{"name":"Elle"}',
+   now(), '{"provider":"email","providers":["email"]}', '{"name":"Jamie"}',
    now(), now(), '', '', '', '')
 on conflict (id) do nothing;
 
@@ -48,7 +48,7 @@ on conflict (id) do nothing;
 -- Belt-and-suspenders alongside the on_auth_user_created trigger.
 insert into public.users (id, email, name) values
   ('10000000-0000-0000-0000-000000000001', 'tyler@example.com', 'Tyler'),
-  ('10000000-0000-0000-0000-000000000002', 'jamie@example.com', 'Elle')
+  ('10000000-0000-0000-0000-000000000002', 'jamie@example.com', 'Jamie')
 on conflict (id) do nothing;
 
 -- The username_login migration ran before these rows existed.
