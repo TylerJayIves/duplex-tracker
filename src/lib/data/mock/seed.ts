@@ -22,25 +22,25 @@ function daysFromNow(n: number): string {
 
 export const property: Property = {
   id: "property-main",
-  address: "3250",
+  address: "The Duplex",
   notes:
-    "Duplex with two rental units (3250 / 3250A) plus shared and external work — roof, siding, garden, garage.",
+    "Duplex with two rental units (Unit A and Unit B) plus shared and external work — roof, siding, garden, garage.",
 };
 
 export const areas: Area[] = [
   {
-    id: "area-3250",
+    id: "area-unit-a",
     propertyId: "property-main",
-    name: "3250",
+    name: "A",
     type: "rental_unit",
     targetRentCents: 185000,
     targetReadyDate: "2026-11-01",
     sharedAllocationPct: 50,
   },
   {
-    id: "area-3250a",
+    id: "area-unit-b",
     propertyId: "property-main",
-    name: "3250A",
+    name: "B",
     type: "rental_unit",
     targetRentCents: 160000,
     targetReadyDate: "2026-12-15",
@@ -144,12 +144,12 @@ export const contractors: Contractor[] = [
 
 export const projects: Project[] = [
   {
-    id: "project-3250-kitchen",
-    areaId: "area-3250",
+    id: "project-unit-a-kitchen",
+    areaId: "area-unit-a",
     leadId: "user-tyler",
-    title: "3250 Kitchen Refresh",
+    title: "Unit A Kitchen Refresh",
     description:
-      "Replace cabinets, countertops, and appliances to bring 3250's kitchen up to rentable condition.",
+      "Replace cabinets, countertops, and appliances to bring Unit A's kitchen up to rentable condition.",
     category: "Kitchen",
     status: "in_progress",
     priority: "high",
@@ -172,10 +172,10 @@ export const projects: Project[] = [
     color: "slate",
   },
   {
-    id: "project-3250a-bath",
-    areaId: "area-3250a",
+    id: "project-unit-b-bath",
+    areaId: "area-unit-b",
     leadId: "user-tyler",
-    title: "3250A Bathroom Remodel",
+    title: "Unit B Bathroom Remodel",
     description:
       "Original bathroom fixtures are dated; scope not finalized yet.",
     category: "Bathroom",
@@ -230,7 +230,7 @@ export const projects: Project[] = [
 export const tasks: Task[] = [
   {
     id: "task-kitchen-1",
-    projectId: "project-3250-kitchen",
+    projectId: "project-unit-a-kitchen",
     assignedToId: "user-jamie",
     title: "Remove old cabinets",
     isDone: true,
@@ -239,7 +239,7 @@ export const tasks: Task[] = [
   },
   {
     id: "task-kitchen-2",
-    projectId: "project-3250-kitchen",
+    projectId: "project-unit-a-kitchen",
     assignedToId: "user-jamie",
     title: "Install new cabinets",
     isDone: true,
@@ -248,7 +248,7 @@ export const tasks: Task[] = [
   },
   {
     id: "task-kitchen-3",
-    projectId: "project-3250-kitchen",
+    projectId: "project-unit-a-kitchen",
     assignedToId: "user-tyler",
     title: "Order quartz countertop",
     isDone: false,
@@ -257,7 +257,7 @@ export const tasks: Task[] = [
   },
   {
     id: "task-kitchen-4",
-    projectId: "project-3250-kitchen",
+    projectId: "project-unit-a-kitchen",
     assignedToId: "user-tyler",
     title: "Schedule appliance delivery",
     isDone: false,
@@ -266,7 +266,7 @@ export const tasks: Task[] = [
   },
   {
     id: "task-kitchen-5",
-    projectId: "project-3250-kitchen",
+    projectId: "project-unit-a-kitchen",
     assignedToId: null,
     title: "Final electrical inspection",
     isDone: false,
@@ -302,7 +302,7 @@ export const tasks: Task[] = [
   },
   {
     id: "task-bath-1",
-    projectId: "project-3250a-bath",
+    projectId: "project-unit-b-bath",
     assignedToId: "user-tyler",
     title: "Get quotes from 2-3 contractors",
     isDone: false,
@@ -311,7 +311,7 @@ export const tasks: Task[] = [
   },
   {
     id: "task-bath-2",
-    projectId: "project-3250a-bath",
+    projectId: "project-unit-b-bath",
     assignedToId: null,
     title: "Decide: full remodel vs. refresh",
     isDone: false,
@@ -323,7 +323,7 @@ export const tasks: Task[] = [
 export const costItems: CostItem[] = [
   {
     id: "cost-kitchen-cabinets",
-    projectId: "project-3250-kitchen",
+    projectId: "project-unit-a-kitchen",
     label: "Cabinets — Northside Kitchen & Bath",
     category: "materials",
     estimatedCostCents: 850000,
@@ -332,7 +332,7 @@ export const costItems: CostItem[] = [
   },
   {
     id: "cost-kitchen-countertop",
-    projectId: "project-3250-kitchen",
+    projectId: "project-unit-a-kitchen",
     label: "Quartz countertop",
     category: "materials",
     estimatedCostCents: 320000,
@@ -341,7 +341,7 @@ export const costItems: CostItem[] = [
   },
   {
     id: "cost-kitchen-electrician",
-    projectId: "project-3250-kitchen",
+    projectId: "project-unit-a-kitchen",
     label: "Electrician — rewire under-cabinet lighting",
     category: "labor",
     estimatedCostCents: 40000,
@@ -350,7 +350,7 @@ export const costItems: CostItem[] = [
   },
   {
     id: "cost-kitchen-permit",
-    projectId: "project-3250-kitchen",
+    projectId: "project-unit-a-kitchen",
     label: "Electrical permit",
     category: "permits",
     estimatedCostCents: 12000,
@@ -401,7 +401,7 @@ export const quotes: Quote[] = [
   },
   {
     id: "quote-kitchen-northside",
-    projectId: "project-3250-kitchen",
+    projectId: "project-unit-a-kitchen",
     contractorId: "contractor-northside-kitchens",
     amountCents: 850000,
     scopeDescription: "Full cabinet replacement, install only (materials separate).",
@@ -440,16 +440,16 @@ export const quoteReminders: QuoteReminder[] = [
 
 export const budgets: Budget[] = [
   {
-    id: "budget-area-3250",
+    id: "budget-area-unit-a",
     relatedType: "area",
-    relatedId: "area-3250",
+    relatedId: "area-unit-a",
     limitCents: 1200000,
-    notes: "3250 unit-wide renovation cap for this year.",
+    notes: "Unit A renovation cap for this year.",
   },
   {
     id: "budget-kitchen",
     relatedType: "project",
-    relatedId: "project-3250-kitchen",
+    relatedId: "project-unit-a-kitchen",
     limitCents: 900000,
     notes: "",
   },
@@ -472,14 +472,14 @@ export const budgets: Budget[] = [
 export const comments: Comment[] = [
   {
     id: "comment-kitchen-1",
-    projectId: "project-3250-kitchen",
+    projectId: "project-unit-a-kitchen",
     authorId: "user-jamie",
     text: "Countertop samples came in — I like the honed quartz over the polished one. Thoughts?",
     createdAt: "2026-07-25T14:32:00Z",
   },
   {
     id: "comment-kitchen-2",
-    projectId: "project-3250-kitchen",
+    projectId: "project-unit-a-kitchen",
     authorId: "user-tyler",
     text: "Agreed, honed will hide watermarks better too. Let's go with that.",
     createdAt: "2026-07-26T09:10:00Z",
@@ -504,8 +504,8 @@ export const attachments: Attachment[] = [
   {
     id: "attachment-kitchen-before",
     relatedType: "project",
-    relatedId: "project-3250-kitchen",
-    fileUrl: "3250-kitchen-before.jpg",
+    relatedId: "project-unit-a-kitchen",
+    fileUrl: "unit-a-kitchen-before.jpg",
     caption: "Before — original cabinets",
     uploadedById: "user-tyler",
     uploadedAt: "2026-06-01T10:00:00Z",
@@ -513,8 +513,8 @@ export const attachments: Attachment[] = [
   {
     id: "attachment-kitchen-cabinets-in",
     relatedType: "project",
-    relatedId: "project-3250-kitchen",
-    fileUrl: "3250-kitchen-cabinets-installed.jpg",
+    relatedId: "project-unit-a-kitchen",
+    fileUrl: "unit-a-kitchen-cabinets-installed.jpg",
     caption: "New cabinets installed",
     uploadedById: "user-jamie",
     uploadedAt: "2026-07-15T16:20:00Z",

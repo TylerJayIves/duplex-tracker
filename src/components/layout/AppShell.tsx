@@ -21,7 +21,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
       <header className="border-b-2 border-ink">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <Link href="/" className="font-heading text-lg font-bold text-ink">
-            The 3250 Duplex
+            The Duplex
           </Link>
           {user && (
             <nav className="flex flex-wrap items-center gap-1">

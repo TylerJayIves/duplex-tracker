@@ -15,7 +15,7 @@ export default async function LoginPage({
         <p className="font-mono text-xs tracking-wide text-primary uppercase">
           Sign in
         </p>
-        <h1 className="mt-1 text-2xl font-bold">The 3250 Duplex</h1>
+        <h1 className="mt-1 text-2xl font-bold">The Duplex</h1>
       </div>
       <LoginForm next={next} />
     </div>

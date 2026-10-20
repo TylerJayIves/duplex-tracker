@@ -29,7 +29,7 @@ export async function FunShell({ children }: { children: React.ReactNode }) {
               🏡
             </span>
             <span className="font-heading text-xl leading-none font-bold whitespace-nowrap text-ink">
-              3250 Duplex
+              The Duplex
               {user && (
                 <span className="block text-xs font-medium text-ink-soft">
                   Hey {user.name} 👋

@@ -254,7 +254,7 @@ export default async function DashboardPage() {
     <div className="space-y-10">
       <div>
         <p className="font-mono text-xs tracking-wide text-primary uppercase">Dashboard</p>
-        <h1 className="mt-1 text-3xl font-bold">The 3250 Duplex</h1>
+        <h1 className="mt-1 text-3xl font-bold">The Duplex</h1>
       </div>
 
       <DashboardOverview>
