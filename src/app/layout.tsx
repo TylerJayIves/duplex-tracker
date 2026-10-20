@@ -14,8 +14,8 @@ const fredoka = Fredoka({ subsets: ["latin"], variable: "--font-fredoka", preloa
 const nunito = Nunito({ subsets: ["latin"], variable: "--font-nunito", preload: false });
 
 export const metadata: Metadata = {
-  title: "The 3250 Duplex",
-  description: "Renovation and rental tracker for 3250 / 3250A.",
+  title: "The Duplex",
+  description: "Renovation and rental tracker for a two-unit duplex.",
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {

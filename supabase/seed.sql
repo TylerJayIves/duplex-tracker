@@ -59,12 +59,12 @@ update public.users set username = lower(name) where username is null;
 -- ============================================================================
 
 insert into public.properties (id, address, notes) values
-  ('30000000-0000-0000-0000-000000000001', '3250',
-   'Duplex with two rental units (3250 / 3250A) plus shared and external work -- roof, siding, garden, garage.');
+  ('30000000-0000-0000-0000-000000000001', 'The Duplex',
+   'Duplex with two rental units (Unit A and Unit B) plus shared and external work -- roof, siding, garden, garage.');
 
 insert into public.areas (id, property_id, name, type, target_rent_cents, target_ready_date, shared_allocation_pct) values
-  ('40000000-0000-0000-0000-000000000001', '30000000-0000-0000-0000-000000000001', '3250', 'rental_unit', 185000, '2026-11-01', 50),
-  ('40000000-0000-0000-0000-000000000002', '30000000-0000-0000-0000-000000000001', '3250A', 'rental_unit', 160000, '2026-12-15', 50),
+  ('40000000-0000-0000-0000-000000000001', '30000000-0000-0000-0000-000000000001', 'A', 'rental_unit', 185000, '2026-11-01', 50),
+  ('40000000-0000-0000-0000-000000000002', '30000000-0000-0000-0000-000000000001', 'B', 'rental_unit', 160000, '2026-12-15', 50),
   ('40000000-0000-0000-0000-000000000003', '30000000-0000-0000-0000-000000000001', 'Roof', 'external', null, null, null),
   ('40000000-0000-0000-0000-000000000004', '30000000-0000-0000-0000-000000000001', 'Siding', 'external', null, null, null),
   ('40000000-0000-0000-0000-000000000005', '30000000-0000-0000-0000-000000000001', 'Garden', 'external', null, null, null),
@@ -79,11 +79,11 @@ insert into public.contractors (id, name, company, phone, email, trade, notes, r
 
 insert into public.projects (id, area_id, lead_id, title, description, category, status, priority, start_date, target_end_date) values
   ('60000000-0000-0000-0000-000000000001', '40000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-000000000001',
-   '3250 Kitchen Refresh', 'Replace cabinets, countertops, and appliances to bring 3250''s kitchen up to rentable condition.', 'Kitchen', 'in_progress', 'high', '2026-06-01', '2026-09-15'),
+   'Unit A Kitchen Refresh', 'Replace cabinets, countertops, and appliances to bring Unit A''s kitchen up to rentable condition.', 'Kitchen', 'in_progress', 'high', '2026-06-01', '2026-09-15'),
   ('60000000-0000-0000-0000-000000000002', '40000000-0000-0000-0000-000000000003', '10000000-0000-0000-0000-000000000002',
    'Full-Property Roof Replacement', 'Existing shingles are past their service life; replace before winter across both units.', 'Roofing', 'planned', 'high', '2026-09-01', '2026-10-15'),
   ('60000000-0000-0000-0000-000000000003', '40000000-0000-0000-0000-000000000002', '10000000-0000-0000-0000-000000000001',
-   '3250A Bathroom Remodel', 'Original bathroom fixtures are dated; scope not finalized yet.', 'Bathroom', 'idea', 'medium', null, null),
+   'Unit B Bathroom Remodel', 'Original bathroom fixtures are dated; scope not finalized yet.', 'Bathroom', 'idea', 'medium', null, null),
   ('60000000-0000-0000-0000-000000000004', '40000000-0000-0000-0000-000000000006', '10000000-0000-0000-0000-000000000002',
    'Garage Door + Apron Repair', 'Replace the failing garage door and patch the concrete apron.', 'Exterior', 'done', 'low', '2026-03-20', '2026-04-10'),
   ('60000000-0000-0000-0000-000000000005', '40000000-0000-0000-0000-000000000005', '10000000-0000-0000-0000-000000000001',
@@ -126,7 +126,7 @@ insert into public.quote_reminders (id, quote_id, offset_days, sent_at, dismisse
   ('a0000000-0000-0000-0000-000000000002', '90000000-0000-0000-0000-000000000004', 3, now(), null);
 
 insert into public.budgets (id, related_type, related_id, limit_cents, notes) values
-  ('b0000000-0000-0000-0000-000000000001', 'area', '40000000-0000-0000-0000-000000000001', 1200000, '3250 unit-wide renovation cap for this year.'),
+  ('b0000000-0000-0000-0000-000000000001', 'area', '40000000-0000-0000-0000-000000000001', 1200000, 'Unit A renovation cap for this year.'),
   ('b0000000-0000-0000-0000-000000000002', 'project', '60000000-0000-0000-0000-000000000001', 900000, ''),
   ('b0000000-0000-0000-0000-000000000003', 'project', '60000000-0000-0000-0000-000000000004', 250000, ''),
   ('b0000000-0000-0000-0000-000000000004', 'area', '40000000-0000-0000-0000-000000000003', 1600000, '');
@@ -142,6 +142,6 @@ insert into public.comments (id, project_id, author_id, text, created_at) values
    'Let''s just confirm the shingle color before we sign anything.', '2026-08-03T08:47:00Z');
 
 insert into public.attachments (id, related_type, related_id, file_url, caption, uploaded_by_id, uploaded_at) values
-  ('d0000000-0000-0000-0000-000000000001', 'project', '60000000-0000-0000-0000-000000000001', '3250-kitchen-before.jpg', 'Before -- original cabinets', '10000000-0000-0000-0000-000000000001', '2026-06-01T10:00:00Z'),
-  ('d0000000-0000-0000-0000-000000000002', 'project', '60000000-0000-0000-0000-000000000001', '3250-kitchen-cabinets-installed.jpg', 'New cabinets installed', '10000000-0000-0000-0000-000000000002', '2026-07-15T16:20:00Z'),
+  ('d0000000-0000-0000-0000-000000000001', 'project', '60000000-0000-0000-0000-000000000001', 'unit-a-kitchen-before.jpg', 'Before -- original cabinets', '10000000-0000-0000-0000-000000000001', '2026-06-01T10:00:00Z'),
+  ('d0000000-0000-0000-0000-000000000002', 'project', '60000000-0000-0000-0000-000000000001', 'unit-a-kitchen-cabinets-installed.jpg', 'New cabinets installed', '10000000-0000-0000-0000-000000000002', '2026-07-15T16:20:00Z'),
   ('d0000000-0000-0000-0000-000000000003', 'quote', '90000000-0000-0000-0000-000000000001', 'konecny-roofing-quote-2026-08-01.pdf', null, '10000000-0000-0000-0000-000000000002', '2026-08-01T12:00:00Z');
