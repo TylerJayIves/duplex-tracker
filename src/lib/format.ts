@@ -16,7 +16,7 @@ const DATE_FORMATTER = new Intl.DateTimeFormat("en-US", {
   year: "numeric",
 });
 
-// Tyler and Elle are both in Central time -- "today" for due dates, quote
+// Both users are in Central time -- "today" for due dates, quote
 // expiry, coming-up dates, etc. needs to follow their real calendar day, not
 // UTC's. UTC runs 5-6 hours ahead of Central, so anything keyed off raw
 // Date.now()/toISOString() flips to the next calendar day while it's still
@@ -40,7 +40,7 @@ export function formatDate(dateStr: string | null): string {
   return DATE_FORMATTER.format(new Date(dateStr));
 }
 
-/** Today's calendar date where Tyler and Elle actually are, as YYYY-MM-DD. */
+/** Today's calendar date where the users actually are, as YYYY-MM-DD. */
 export function todayISO(): string {
   const parts = TODAY_PARTS_FORMATTER.formatToParts(new Date());
   const year = parts.find((p) => p.type === "year")!.value;

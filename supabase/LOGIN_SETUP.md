@@ -1,7 +1,7 @@
 # Login setup (hosted Supabase)
 
 Sign-in is a username and password. No email is ever sent. The usernames
-start as each person's name in lowercase (`tyler`, `elle`).
+start as each person's name in lowercase (e.g. `tyler`, `jamie`).
 
 `supabase/config.toml` only configures the local stack, so the hosted
 project needs these steps once.
@@ -33,9 +33,9 @@ set encrypted_password = extensions.crypt('CHANGE-ME-TYLER', extensions.gen_salt
 where id = (select id from public.users where username = 'tyler');
 
 update auth.users
-set encrypted_password = extensions.crypt('CHANGE-ME-ELLE', extensions.gen_salt('bf')),
+set encrypted_password = extensions.crypt('CHANGE-ME-JAMIE', extensions.gen_salt('bf')),
     email_confirmed_at = coalesce(email_confirmed_at, now())
-where id = (select id from public.users where username = 'elle');
+where id = (select id from public.users where username = 'jamie');
 
 -- Check: both rows should say has_password = true
 select u.username, a.email, a.encrypted_password <> '' as has_password
