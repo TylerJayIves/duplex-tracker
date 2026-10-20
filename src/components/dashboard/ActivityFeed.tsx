@@ -19,11 +19,7 @@ export function ActivityFeed({ items }: { items: ActivityItem[] }) {
               <span
                 className={cn(
                   "flex h-6 w-6 shrink-0 items-center justify-center rounded-full font-mono text-[0.6rem] font-bold",
-                  avatarColor(item.authorName) === "Tyler"
-                    ? "bg-primary text-primary-foreground"
-                    : avatarColor(item.authorName) === "Elle"
-                      ? "bg-moss text-paper"
-                      : "bg-ink-soft text-paper",
+                  avatarColor(item.authorName),
                 )}
               >
                 {item.authorName.charAt(0)}
