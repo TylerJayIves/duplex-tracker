@@ -2,6 +2,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/format";
 import type { ActivityItem } from "@/lib/domain/dashboard";
+import { avatarColor } from "@/lib/avatar-color";
 
 export function ActivityFeed({ items }: { items: ActivityItem[] }) {
   return (
@@ -18,19 +19,23 @@ export function ActivityFeed({ items }: { items: ActivityItem[] }) {
               <span
                 className={cn(
                   "flex h-6 w-6 shrink-0 items-center justify-center rounded-full font-mono text-[0.6rem] font-bold",
-                  item.authorName === "Tyler"
+                  avatarColor(item.authorName) === "Tyler"
                     ? "bg-primary text-primary-foreground"
-                    : item.authorName === "Elle"
+                    : avatarColor(item.authorName) === "Elle"
                       ? "bg-moss text-paper"
-                      : "bg-ink-soft text-paper"
+                      : "bg-ink-soft text-paper",
                 )}
               >
                 {item.authorName.charAt(0)}
               </span>
               <div className="min-w-0 text-sm">
                 <p className="text-ink-soft">
-                  <span className="font-semibold text-ink">{item.authorName}</span>{" "}
-                  {item.kind === "comment" ? "commented on" : "uploaded a file to"}{" "}
+                  <span className="font-semibold text-ink">
+                    {item.authorName}
+                  </span>{" "}
+                  {item.kind === "comment"
+                    ? "commented on"
+                    : "uploaded a file to"}{" "}
                   <Link
                     href={`/projects/${item.projectId}`}
                     className="font-semibold text-ink hover:text-primary"
