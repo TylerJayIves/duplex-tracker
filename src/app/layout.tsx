@@ -15,7 +15,7 @@ const nunito = Nunito({ subsets: ["latin"], variable: "--font-nunito", preload: 
 
 export const metadata: Metadata = {
   title: "The Duplex",
-  description: "Renovation and rental tracker for Unit A and Unit B.",
+  description: "Renovation and rental tracker for a two-unit duplex.",
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
