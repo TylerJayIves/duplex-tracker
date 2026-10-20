@@ -9,13 +9,13 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4 # grab your code
+      - uses: actions/checkout@v4 # grab the code
 
       - uses: actions/setup-node@v4 # install Node
         with:
           node-version: 24
           cache: npm # reuse downloads between runs, faster
 
-      - run: npm ci # clean install from package-lock.json
+      - run: npm ci # clean install rather then npm install
 
-      - run: npm run test:run # your tests, run once and exit
+      - run: npm run test:run # run once and exit
