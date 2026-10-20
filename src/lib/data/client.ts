@@ -130,7 +130,7 @@ export interface DataClient {
     withinDays: number
   ): Promise<Array<QuoteReminder & { quote: Quote }>>;
 
-  /** Deterministic dashboard "needs attention" item ids Tyler/Elle have dismissed, e.g. "task-<uuid>". */
+  /** Deterministic dashboard "needs attention" item ids a user has dismissed, e.g. "task-<uuid>". */
   listDismissedAttentionItemIds(): Promise<string[]>;
   dismissAttentionItem(itemId: string, dismissedById: ID): Promise<void>;
 

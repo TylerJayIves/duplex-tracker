@@ -10,7 +10,7 @@
 -- d=attachments
 
 -- ============================================================================
--- Two real logins (local password "duplex-dev"; usernames tyler / elle) -- inserting straight into
+-- Two real logins (local password "duplex-dev"; usernames tyler / jamie) -- inserting straight into
 -- auth.users/auth.identities is an unofficial-but-common local-dev-only
 -- pattern (verified against this CLI's actual schema via `\d auth.users` /
 -- `\d auth.identities` before writing this). Never do this against a hosted
@@ -24,12 +24,12 @@ insert into auth.users (
   email_change_token_new, recovery_token
 ) values
   ('00000000-0000-0000-0000-000000000000', '10000000-0000-0000-0000-000000000001',
-   'authenticated', 'authenticated', 'tylerjayives@proton.me', extensions.crypt('duplex-dev', extensions.gen_salt('bf')),
+   'authenticated', 'authenticated', 'tyler@example.com', extensions.crypt('duplex-dev', extensions.gen_salt('bf')),
    now(), '{"provider":"email","providers":["email"]}', '{"name":"Tyler"}',
    now(), now(), '', '', '', ''),
   ('00000000-0000-0000-0000-000000000000', '10000000-0000-0000-0000-000000000002',
-   'authenticated', 'authenticated', 'lynnaisthebest@gmail.com', extensions.crypt('duplex-dev', extensions.gen_salt('bf')),
-   now(), '{"provider":"email","providers":["email"]}', '{"name":"Elle"}',
+   'authenticated', 'authenticated', 'jamie@example.com', extensions.crypt('duplex-dev', extensions.gen_salt('bf')),
+   now(), '{"provider":"email","providers":["email"]}', '{"name":"Jamie"}',
    now(), now(), '', '', '', '')
 on conflict (id) do nothing;
 
@@ -37,18 +37,18 @@ insert into auth.identities (id, user_id, provider_id, identity_data, provider, 
 values
   ('20000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-000000000001',
    '10000000-0000-0000-0000-000000000001',
-   jsonb_build_object('sub', '10000000-0000-0000-0000-000000000001', 'email', 'tylerjayives@proton.me'),
+   jsonb_build_object('sub', '10000000-0000-0000-0000-000000000001', 'email', 'tyler@example.com'),
    'email', now(), now(), now()),
   ('20000000-0000-0000-0000-000000000002', '10000000-0000-0000-0000-000000000002',
    '10000000-0000-0000-0000-000000000002',
-   jsonb_build_object('sub', '10000000-0000-0000-0000-000000000002', 'email', 'lynnaisthebest@gmail.com'),
+   jsonb_build_object('sub', '10000000-0000-0000-0000-000000000002', 'email', 'jamie@example.com'),
    'email', now(), now(), now())
 on conflict (id) do nothing;
 
 -- Belt-and-suspenders alongside the on_auth_user_created trigger.
 insert into public.users (id, email, name) values
-  ('10000000-0000-0000-0000-000000000001', 'tylerjayives@proton.me', 'Tyler'),
-  ('10000000-0000-0000-0000-000000000002', 'lynnaisthebest@gmail.com', 'Elle')
+  ('10000000-0000-0000-0000-000000000001', 'tyler@example.com', 'Tyler'),
+  ('10000000-0000-0000-0000-000000000002', 'jamie@example.com', 'Jamie')
 on conflict (id) do nothing;
 
 -- The username_login migration ran before these rows existed.
