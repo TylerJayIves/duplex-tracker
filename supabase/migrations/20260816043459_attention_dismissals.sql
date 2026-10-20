@@ -1,4 +1,4 @@
--- Lets Tyler/Elle dismiss a "Needs attention" dashboard item (an overdue
+-- Lets a user dismiss a "Needs attention" dashboard item (an overdue
 -- task, an over-budget budget, a quote awaiting a decision) without
 -- changing the underlying data. item_id matches the deterministic id the
 -- dashboard already computes (e.g. "task-<uuid>", "budget-<uuid>",

@@ -95,8 +95,8 @@ export const areas: Area[] = [
 
 // Two accounts for the household — rename to match who's actually using this.
 export const users: User[] = [
-  { id: "user-tyler", name: "Tyler", email: "tylerjayives@proton.me" },
-  { id: "user-jamie", name: "Elle", email: "lynnaisthebest@gmail.com" },
+  { id: "user-tyler", name: "Tyler", email: "tyler@example.com" },
+  { id: "user-jamie", name: "Jamie", email: "jamie@example.com" },
 ];
 
 export const contractors: Contractor[] = [
