@@ -1,0 +1,21 @@
+name: Tests
+
+on:
+  pull_request: # run on every PR
+  push:
+    branches: [master] # and again after merging
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4 # grab the code
+
+      - uses: actions/setup-node@v4 # install Node
+        with:
+          node-version: 24
+          cache: npm # reuse downloads between runs, faster
+
+      - run: npm ci # clean install rather then npm install
+
+      - run: npm run test:run # run once and exit
