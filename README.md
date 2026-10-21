@@ -15,13 +15,13 @@ No account needed. It runs on sample data and resets from time to time.
 
 ## Screenshots
 
-| Dashboard                                    | Project page                                  |
-| -------------------------------------------- | --------------------------------------------- |
-| ![Dashboard](docs/screenshots/dashboard.png) | ![Project page](docs/screenshots/project.png) |
+| Dashboard                                    | Project page                                   |
+| -------------------------------------------- | ---------------------------------------------- |
+| ![Dashboard](docs/screenshots/dashboard.png) | ![Project page](docs/screenshots/projects.png) |
 
-| The "fun" layout                        |
-| --------------------------------------- |
-| ![Fun layout](docs/screenshots/fun.png) |
+| The "fun" layout                              |
+| --------------------------------------------- |
+| ![Fun layout](docs/screenshots/funDesign.png) |
 
 ## Features
 
