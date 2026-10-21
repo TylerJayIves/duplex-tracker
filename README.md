@@ -13,10 +13,15 @@ We're completely new to renovating, and it gets more complex by the week, so I k
 **[Try the live demo →](https://duplex-tracker-demo.vercel.app/)**
 No account needed. It runs on sample data and resets from time to time.
 
-Screenshots:
-![Dashboard](docs/screenshots/regularMode.png)
-![Project detail](docs/screenshots/project.jpg)
-![Fun UI](docs/screenshots/funDesign.jpg)
+## Screenshots
+
+| Dashboard                                    | Project page                                  |
+| -------------------------------------------- | --------------------------------------------- |
+| ![Dashboard](docs/screenshots/dashboard.png) | ![Project page](docs/screenshots/project.png) |
+
+| The "fun" layout                        |
+| --------------------------------------- |
+| ![Fun layout](docs/screenshots/fun.png) |
 
 ## Features
 
