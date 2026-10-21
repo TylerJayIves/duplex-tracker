@@ -4,19 +4,24 @@
 
 A renovation and rental tracker for a two-unit duplex. It keeps every project, checklist, cost, contractor quote and budget in one place, and the dashboard flags what needs attention before it turns into a problem.
 
-**[Try the live demo →](https://duplex-tracker-demo.vercel.app/)**
-No account needed. It runs on sample data and resets from time to time.
-
-Screenshots:
-![Dashboard](docs/screenshots/regularMode.png)
-![Project detail](docs/screenshots/project.jpg)
-![Fun UI](docs/screenshots/funDesign.jpg)
-
 ## Why I built it
 
 My wife and I are renovating a duplex and getting both units ready to rent, and the to-do list quickly became unmanageable. Tools like Jira didn't fit: they're built for software teams, not for tracking contractor quotes, costs against a budget, and which unit is ready when. So I built something that did, where the two of us can see everything in one place. It's what we use day to day.
 
 We're completely new to renovating, and it gets more complex by the week, so I keep expanding the app as new needs come up.
+
+**[Try the live demo →](https://duplex-tracker-demo.vercel.app/)**
+No account needed. It runs on sample data and resets from time to time.
+
+## Screenshots
+
+| Dashboard                                    | Project page                                   |
+| -------------------------------------------- | ---------------------------------------------- |
+| ![Dashboard](docs/screenshots/dashboard.png) | ![Project page](docs/screenshots/projects.png) |
+
+| The "fun" layout                              |
+| --------------------------------------------- |
+| ![Fun layout](docs/screenshots/funDesign.png) |
 
 ## Features
 
