@@ -87,18 +87,16 @@ export async function deleteAttachmentAction(
   fileUrl: string,
   projectId: ID,
 ): Promise<DeleteAttachmentState> {
-  // The demo has no real file storage, so only the mock row gets deleted.
-  if (!isDemo) {
-    const supabase = await createClient();
-    await supabase.storage.from("attachments").remove([fileUrl]);
-  }
   const user = await getCurrentUser();
   if (!user) {
     return { error: "You're not signed in." };
   }
 
-  const supabase = await createClient();
-  await supabase.storage.from("attachments").remove([fileUrl]);
+  // The demo has no real file storage, so only the mock row gets deleted.
+  if (!isDemo) {
+    const supabase = await createClient();
+    await supabase.storage.from("attachments").remove([fileUrl]);
+  }
 
   try {
     await dataClient.deleteAttachment(attachmentId);
