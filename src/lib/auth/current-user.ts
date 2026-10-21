@@ -2,8 +2,13 @@ import "server-only";
 import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import type { User } from "@/lib/data/types";
+import { isDemo } from "../demo";
+import { users } from "@/lib/data/mock/seed";
 
 export const getCurrentUser = cache(async (): Promise<User | null> => {
+  if (isDemo) {
+    return users[0];
+  }
   const supabase = await createClient();
   const {
     data: { user },

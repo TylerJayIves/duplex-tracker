@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { safeNext } from "../auth/safe-next";
 import { signInMessage } from "../auth/sign-in-message";
+import { isDemo } from "../demo";
 export type FormState = { error?: string; ok?: boolean };
 
 /**
@@ -15,6 +16,8 @@ export async function signIn(
   prev: FormState,
   formData: FormData,
 ): Promise<FormState> {
+  if (isDemo) redirect("/");
+
   const login = String(formData.get("username") ?? "").trim();
   const password = String(formData.get("password") ?? "");
   const next = safeNext(formData.get("next"));
@@ -57,6 +60,7 @@ export async function changePassword(
   prev: FormState,
   formData: FormData,
 ): Promise<FormState> {
+  if (isDemo) return { error: "You are using the project in demo mode" };
   const password = String(formData.get("password") ?? "");
   const confirm = String(formData.get("confirm") ?? "");
   if (password.length < 8) return { error: "Use at least 8 characters." };
@@ -76,6 +80,7 @@ export async function changePassword(
 }
 
 export async function signOut() {
+  if (isDemo) redirect("/");
   const supabase = await createClient();
   await supabase.auth.signOut();
   redirect("/login");
