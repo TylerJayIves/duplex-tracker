@@ -1,11 +1,13 @@
+import { redirect } from "next/navigation";
 import { LoginForm } from "@/components/auth/LoginForm";
-
+import { isDemo } from "@/lib/demo";
 export default async function LoginPage({
   searchParams,
 }: {
   searchParams: Promise<{ next?: string }>;
 }) {
   const params = await searchParams;
+  if (isDemo) redirect("/");
   // The action re-checks this; it's only passed through the form.
   const next = params.next?.startsWith("/") ? params.next : "/";
 

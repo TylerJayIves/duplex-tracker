@@ -5,13 +5,23 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppShell } from "@/components/layout/AppShell";
 import { FunShell } from "@/components/layout/fun/FunShell";
 import { getLayoutChoice } from "@/lib/layout-choice";
+import { DemoBanner } from "@/components/layout/DemoBanner";
+import { isDemo } from "@/lib/demo";
 import "./globals.css";
 
 // Only the fun layout uses these. preload: false keeps the classic layout
 // from downloading them: the browser fetches a font file only once some CSS
 // on the page actually asks for it.
-const fredoka = Fredoka({ subsets: ["latin"], variable: "--font-fredoka", preload: false });
-const nunito = Nunito({ subsets: ["latin"], variable: "--font-nunito", preload: false });
+const fredoka = Fredoka({
+  subsets: ["latin"],
+  variable: "--font-fredoka",
+  preload: false,
+});
+const nunito = Nunito({
+  subsets: ["latin"],
+  variable: "--font-nunito",
+  preload: false,
+});
 
 export const metadata: Metadata = {
   title: "The Duplex",
@@ -32,6 +42,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full antialiased">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <TooltipProvider>
+            {isDemo && <DemoBanner />}
             <Shell>{children}</Shell>
           </TooltipProvider>
         </ThemeProvider>

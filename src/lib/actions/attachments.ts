@@ -5,7 +5,7 @@ import { dataClient } from "@/lib/data";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/auth/current-user";
 import type { AttachmentRelatedType, ID } from "@/lib/data/types";
-
+import { isDemo } from "../demo";
 const MAX_FILE_BYTES = 10 * 1024 * 1024;
 const ALLOWED_MIME_TYPES = [
   "application/pdf",
@@ -31,8 +31,9 @@ export async function uploadAttachmentAction(
   relatedId: ID,
   projectId: ID,
   _prevState: UploadAttachmentState,
-  formData: FormData
+  formData: FormData,
 ): Promise<UploadAttachmentState> {
+  if (isDemo) return { error: "You are in Demo mode" };
   const file = formData.get("file");
   const caption = String(formData.get("caption") ?? "").trim() || null;
 
@@ -84,18 +85,18 @@ export type DeleteAttachmentState = { error: string } | undefined;
 export async function deleteAttachmentAction(
   attachmentId: ID,
   fileUrl: string,
-  projectId: ID
+  projectId: ID,
 ): Promise<DeleteAttachmentState> {
   const user = await getCurrentUser();
   if (!user) {
     return { error: "You're not signed in." };
   }
 
-  const supabase = await createClient();
-  // Best-effort: if the object is already missing (e.g. stale metadata that
-  // never had a real file behind it), that's fine -- there's nothing to
-  // clean up, and it shouldn't block removing the row itself.
-  await supabase.storage.from("attachments").remove([fileUrl]);
+  // The demo has no real file storage, so only the mock row gets deleted.
+  if (!isDemo) {
+    const supabase = await createClient();
+    await supabase.storage.from("attachments").remove([fileUrl]);
+  }
 
   try {
     await dataClient.deleteAttachment(attachmentId);
